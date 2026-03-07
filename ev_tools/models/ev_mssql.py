@@ -25,13 +25,18 @@ class EVMssql(models.AbstractModel):
         params = self.env["ir.config_parameter"].sudo()
 
         password = params.get_param("ev.mssql.password")
+        
+        try:
+            password = tool.decrypt(password)
+        except:
+            password = ""
 
         return {
             "server": params.get_param("ev.mssql.server"),
             "instance": params.get_param("ev.mssql.instance"),
             "port": params.get_param("ev.mssql.port"),
             "username": params.get_param("ev.mssql.username"),
-            "password": tool.decrypt(password) if password else "",
+            "password": password,
         }
 
     def connect(self, dbname="master"):
