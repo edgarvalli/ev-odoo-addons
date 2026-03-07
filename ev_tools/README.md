@@ -1,2 +1,2 @@
 # Se necesita instalar las siguientes librerias:
-    - pyodbc
+pyodbc
