@@ -15,4 +15,7 @@
     "data": [
         "views/res_config_settings_view.xml",
     ],
+    "external_dependencies": {
+        "python": ["pyodbc"],
+    },
 }
