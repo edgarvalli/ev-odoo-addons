@@ -15,7 +15,7 @@ class ResConfigSettings(models.TransientModel):
 
     def set_values(self):
 
-        tools = self.env["ev.tools"]
+        tools = self.env["ev.tools.mssql"]
 
         try:
             # probar conexión con los valores ingresados
@@ -33,7 +33,7 @@ class ResConfigSettings(models.TransientModel):
         # si pasa la prueba guarda
         super().set_values()
 
-        tools.save_mssql_config(
+        tools.save_config(
             server=self.ev_mssql_server,
             instance=self.ev_mssql_instance,
             port=self.ev_mssql_port,
@@ -44,7 +44,7 @@ class ResConfigSettings(models.TransientModel):
     def get_values(self):
         res = super().get_values()
 
-        config = self.env["ev.tools"].get_mssql_config()
+        config = self.env["ev.tools.mssql"].get_config()
 
         res.update(
             ev_mssql_server=config.get("server"),
