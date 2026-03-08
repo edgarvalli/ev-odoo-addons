@@ -1,5 +1,4 @@
 from odoo import models
-from pathlib import Path
 from ..services.mssql import SqlServer
 
 class EVMssql(models.AbstractModel):

@@ -1,7 +1,7 @@
 from odoo import models
+from pathlib import Path
 from cryptography.fernet import Fernet
 from odoo.modules.module import get_module_path
-from pathlib import Path
 
 class EVEncrypt(models.AbstractModel):
     _name = "ev.tools.encrypt"
