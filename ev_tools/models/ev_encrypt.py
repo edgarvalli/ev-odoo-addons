@@ -3,8 +3,10 @@ from pathlib import Path
 from cryptography.fernet import Fernet
 from odoo.modules.module import get_module_path
 
+
 class EVEncrypt(models.AbstractModel):
     _name = "ev.tools.encrypt"
+    _description = "Modulo para encriptar texto"
 
     def _get_cipher(self):
         module_path = Path(get_module_path("ev_tools"))

@@ -12,7 +12,6 @@ class ResConfigSettings(models.TransientModel):
     ev_mssql_username = fields.Char(string="Username")
     ev_mssql_password = fields.Char(string="Password")
 
-
     def set_values(self):
 
         tools = self.env["ev.tools.mssql"]
@@ -22,6 +21,7 @@ class ResConfigSettings(models.TransientModel):
             with SqlServer(
                 dbname="master",
                 server=self.ev_mssql_server,
+                instance=self.ev_mssql_instance,
                 user=self.ev_mssql_username,
                 password=self.ev_mssql_password,
             ) as db:
@@ -47,11 +47,11 @@ class ResConfigSettings(models.TransientModel):
         config = self.env["ev.tools.mssql"].get_config()
 
         res.update(
-            ev_mssql_server=config.get("server"),
-            ev_mssql_instance=config.get("instance"),
-            ev_mssql_port=config.get("port"),
-            ev_mssql_username=config.get("username"),
-            ev_mssql_password=config.get("password"),
+            ev_mssql_server=config.server,
+            ev_mssql_instance=config.instance,
+            ev_mssql_port=config.port,
+            ev_mssql_username=config.username,
+            ev_mssql_password=config.password,
         )
 
         return res

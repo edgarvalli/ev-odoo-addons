@@ -46,22 +46,16 @@ class SqlServer:
         if SqlServer.driver:
             return SqlServer.driver
 
-        def _test_driver(d):
-            try:
-                pyodbc.connect(self._get_connection_str(d), timeout=1)
-                return True
-            except:
-                return False
+        installed = pyodbc.drivers()
 
         for d in self.DRIVERS_PRIORIDAD:
-            if _test_driver(d):
+            if d in installed:
                 SqlServer.driver = d
                 return d
 
-        for d in pyodbc.drivers():
-            if _test_driver(d):
-                SqlServer.driver = d
-                return d
+        if installed:
+            SqlServer.driver = installed[0]
+            return installed[0]
 
         raise Exception("No SQL Server ODBC driver found")
 

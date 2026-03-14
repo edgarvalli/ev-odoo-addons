@@ -1,10 +1,12 @@
 from odoo import models
 from ..services.mssql import SqlServer
+from types import SimpleNamespace
+
 
 class EVMssql(models.AbstractModel):
     _name = "ev.tools.mssql"
     _description = "Modulo para conectarse a Sql Server"
-    
+
     def save_config(self, **kwargs):
         """Save Sql Server config"""
         tool = self.env["ev.tools.encrypt"].sudo()
@@ -24,25 +26,28 @@ class EVMssql(models.AbstractModel):
         params = self.env["ir.config_parameter"].sudo()
 
         password = params.get_param("ev.mssql.password")
-        
+
         try:
             password = tool.decrypt(password)
         except:
             password = ""
 
-        return {
-            "server": params.get_param("ev.mssql.server"),
-            "instance": params.get_param("ev.mssql.instance"),
-            "port": params.get_param("ev.mssql.port"),
-            "username": params.get_param("ev.mssql.username"),
-            "password": password,
-        }
+        return SimpleNamespace(
+            **{
+                "server": params.get_param("ev.mssql.server"),
+                "instance": params.get_param("ev.mssql.instance"),
+                "port": params.get_param("ev.mssql.port"),
+                "username": params.get_param("ev.mssql.username"),
+                "password": password,
+            }
+        )
 
     def connect(self, dbname="master"):
-        config = self.get_mssql_config()
+        config = self.get_config()
         return SqlServer(
             dbname=dbname,
-            server=config.get("server"),
-            user=config.get("username"),
-            password=config.get("password"),
+            server=config.server,
+            user=config.username,
+            password=config.password,
+            instance=config.instance,
         )
