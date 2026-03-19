@@ -17,9 +17,12 @@ class Nominas(AbstractModel):
     ### Metodos
 
     def empresas(self, fields: str = "*"):
-        with self.env["ev.tools.mssql"].connect("nomGenerales") as db:
-            sql = f"SELECT {fields} FROM NOM10000 WHERE IDEmpresa <> 1;"
-            return db.fetchall(sql)
+        try:
+            with self.env["ev.tools.mssql"].connect("nomGenerales") as db:
+                sql = f"SELECT {fields} FROM NOM10000 WHERE IDEmpresa <> 1;"
+                return db.fetchall(sql)
+        except Exception as err:
+            raise UserError(str(err))
 
     def obtener_dsl(self):
         dbname = self.env.company.ev_contpaqi_nominas_db

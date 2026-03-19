@@ -1,4 +1,5 @@
 from odoo.models import AbstractModel
+from odoo.exceptions import UserError
 import logging
 from typing import List
 
@@ -48,9 +49,12 @@ class Comercial(AbstractModel):
                 RIGHT(CRUTADATOS,CHARINDEX('\\', REVERSE(CRUTADATOS)) - 1) AS dbname
             FROM Empresas WHERE CIDEMPRESA > 1;
         """
-        with self.env["ev.tools.mssql"].connect("CompacWAdmin") as db:
-            return db.fetchall(sql)
-
+        try:
+            with self.env["ev.tools.mssql"].connect("CompacWAdmin") as db:
+                return db.fetchall(sql)
+        except Exception as err:
+            raise UserError(str(err))
+        
     def clientes(self, **kwargs):
 
         dbname = self.env.company.ev_contpaqi_comercial_db

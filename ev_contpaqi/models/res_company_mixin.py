@@ -18,3 +18,6 @@ class ResCompanyMixin(models.Model):
         domain=[("system_origin", "=", "comercial")],
         string="Empresa Contpaqi Nominas",
     )
+    
+    def sync_empresas(self):
+        self.env["ev.contpaqi.empresas"].action_sync()
