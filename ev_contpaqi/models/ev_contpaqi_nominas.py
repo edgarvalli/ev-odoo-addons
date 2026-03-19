@@ -25,7 +25,7 @@ class Nominas(AbstractModel):
             raise UserError(str(err))
 
     def obtener_dsl(self):
-        dbname = self.env.company.ev_contpaqi_nominas_db
+        dbname = self.env.company.ev_contpaqi_nominas_db.dbname
         try:
             with self.env["ev.tools.mssql"].connect(dbname) as db:
 
@@ -39,7 +39,7 @@ class Nominas(AbstractModel):
             raise UserError(str(err))
 
     def empleados(self, **kwargs):
-        dbname = self.env.company.ev_contpaqi_nominas_db or None
+        dbname = self.env.company.ev_contpaqi_nominas_db.dbname or None
 
         if not dbname:
             raise UserError("No se ha configurado la base de datos en la compañia.")
@@ -49,7 +49,7 @@ class Nominas(AbstractModel):
             return db.fetchall(sql, args)
 
     def buscar_empleado(self, codigo: str):
-        dbname = self.env.company.ev_contpaqi_nominas_db or None
+        dbname = self.env.company.ev_contpaqi_nominas_db.dbname or None
 
         if not dbname:
             raise UserError("No se ha configurado la base de datos en la compañia.")
@@ -62,7 +62,7 @@ class Nominas(AbstractModel):
             raise UserError(str(err))
 
     def buscar_empleado_id(self, id: int):
-        dbname = self.env.company.ev_contpaqi_nominas_db or None
+        dbname = self.env.company.ev_contpaqi_nominas_db.dbname or None
 
         if not dbname:
             raise UserError("No se ha configurado la base de datos en la compañia.")
@@ -89,7 +89,7 @@ class Nominas(AbstractModel):
         idempleado = kwargs.pop("idempleado")
         included_xml = kwargs.pop("xml", False)
 
-        dbname = self.env.company.ev_contpaqi_nominas_db
+        dbname = self.env.company.ev_contpaqi_nominas_db.dbname
 
         try:
             with self.env["ev.tools.mssql"].connect(dbname) as db:
@@ -155,7 +155,7 @@ class Nominas(AbstractModel):
         if not codigo or not iddocumento:
             return False
 
-        dbname = self.env.company.ev_contpaqi_nominas_db or None
+        dbname = self.env.company.ev_contpaqi_nominas_db.dbname or None
 
         if not dbname:
             raise UserError("No se ha configurado la base de datos en la compañia.")
@@ -181,7 +181,7 @@ class Nominas(AbstractModel):
             return False
 
     def datos_comprobante(self, id_documento: int):
-        dbname = self.env.company.ev_contpaqi_nominas_db
+        dbname = self.env.company.ev_contpaqi_nominas_db.dbname
 
         try:
             with self.env["ev.tools.mssql"].connect(dbname) as db:
@@ -217,7 +217,7 @@ class Nominas(AbstractModel):
     ##### HELPERS ###########
 
     def _get_dsl(self, db):
-        dbname = self.env.company.ev_contpaqi_nominas_db
+        dbname = self.env.company.ev_contpaqi_nominas_db.dbname
         try:
             row = db.fetchone(f"SELECT GUIDDSL FROM [{dbname}].dbo.NOM10000")
             if not row:

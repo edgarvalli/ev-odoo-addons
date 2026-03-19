@@ -54,10 +54,10 @@ class Comercial(AbstractModel):
                 return db.fetchall(sql)
         except Exception as err:
             raise UserError(str(err))
-        
+
     def clientes(self, **kwargs):
 
-        dbname = self.env.company.ev_contpaqi_comercial_db
+        dbname = self.env.company.ev_contpaqi_comercial_db.dbname
 
         if not dbname:
             return None
@@ -96,7 +96,7 @@ class Comercial(AbstractModel):
             return db.fetchall(sql, tuple(args))
 
     def buscar_cliente(self, codigo: str):
-        dbname = self.env.company.ev_contpaqi_comercial_db
+        dbname = self.env.company.ev_contpaqi_comercial_db.dbname
 
         if not dbname:
             return None
@@ -109,7 +109,7 @@ class Comercial(AbstractModel):
             return db.fetchone(sql, (codigo,))
 
     def buscar_cliente_id(self, id: int):
-        dbname = self.env.company.ev_contpaqi_comercial_db
+        dbname = self.env.company.ev_contpaqi_comercial_db.dbname
 
         if not dbname:
             return None
@@ -124,7 +124,7 @@ class Comercial(AbstractModel):
     def saldo_clientes(self, saldo_cero=True):
         """Funcion para obtener el estado de cuenta de los clientes"""
 
-        dbname = self.env.company.ev_contpaqi_comercial_db
+        dbname = self.env.company.ev_contpaqi_comercial_db.dbname
 
         if not dbname:
             return None
@@ -190,7 +190,7 @@ class Comercial(AbstractModel):
 
     def saldo_cliente_detalle(self, **kwargs):
         """Funcion para obtener el estado de cuenta actual del cliente"""
-        dbname = self.env.company.ev_contpaqi_comercial_db
+        dbname = self.env.company.ev_contpaqi_comercial_db.dbname
 
         if not dbname:
             return None
