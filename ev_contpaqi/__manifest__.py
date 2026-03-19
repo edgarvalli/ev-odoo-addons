@@ -6,5 +6,9 @@
         Modulo para conectar Odoo con Contpai
     """,
     "depends": ["base", "ev_tools", "hr", "sale"],
-    "data": ["views/res_company_extend.xml"],
+    "data": [
+        "views/res_company_extend.xml",
+        "data/sync_cron.xml",
+        "security/ir.model.access.csv",
+    ],
 }

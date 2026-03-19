@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ev_contpaqi_empresas_admin,access.ev.contpaqi.empresas.admin,model_ev_contpaqi_empresas,base.group_system,1,1,1,1
