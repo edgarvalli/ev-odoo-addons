@@ -238,6 +238,7 @@ class Comercial(AbstractModel):
                 --doc.CRFC rfc,
                 doc.CFECHAVENCIMIENTO fecha_vencimiento,
                 doc.COBSERVACIONES observaciones,
+                doc.CREFERENCIA referencia,
                 folios.CUUID uuid,
                 CASE
                     WHEN DATEDIFF(DAY,doc.CFECHA, @today) BETWEEN 1 AND 30 THEN 'Vigente'
@@ -246,7 +247,8 @@ class Comercial(AbstractModel):
                     WHEN DATEDIFF(DAY,doc.CFECHA, @today) > 90 THEN 'Vencido'
                 END AS estatus,
                 doc.CTOTAL total,
-                doc.CPENDIENTE pendiente
+                doc.CPENDIENTE pendiente,
+                (SELECT TOP 1 CSCMOVTO FROM admMovimientos WHERE CIDDOCUMENTO = 13623 AND CSCMOVTO <> '') AS segmento
             FROM admDocumentos doc
             INNER JOIN admFoliosDigitales folios ON folios.CIDDOCTO = doc.CIDDOCUMENTO
             WHERE {" AND ".join(conditions)} AND doc.CIDDOCUMENTODE = 4
