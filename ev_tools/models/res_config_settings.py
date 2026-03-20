@@ -12,15 +12,6 @@ class ResConfigSettings(models.TransientModel):
     ev_mssql_username = fields.Char(string="Username")
     ev_mssql_password = fields.Char(string="Password")
 
-    from odoo import models
-
-
-from odoo.exceptions import UserError
-
-
-class ResConfigSettings(models.TransientModel):
-    _inherit = "res.config.settings"
-
     def test_sql_connection(self):
         self.ensure_one()
 
