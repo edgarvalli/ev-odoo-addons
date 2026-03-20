@@ -4,7 +4,7 @@
     <record id="ev_tools_settings_view" model="ir.ui.view">
         <field name="name">ev.tools.settings</field>
         <field name="model">res.config.settings</field>
-        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
         <field name="arch" type="xml">
 
             <xpath expr="//form" position="inside">
@@ -14,24 +14,31 @@
                     <block title="SQL Server">
 
                         <setting string="SQL Server Host">
-                            <field name="ev_mssql_server"/>
+                            <field name="ev_mssql_server" />
                         </setting>
 
                         <setting string="Instance">
-                            <field name="ev_mssql_instance"/>
+                            <field name="ev_mssql_instance" />
                         </setting>
 
                         <setting string="Port">
-                            <field name="ev_mssql_port"/>
+                            <field name="ev_mssql_port" />
                         </setting>
 
                         <setting string="Username">
-                            <field name="ev_mssql_username"/>
+                            <field name="ev_mssql_username" />
                         </setting>
 
                         <setting string="Password">
-                            <field name="ev_mssql_password" password="True"/>
+                            <field name="ev_mssql_password" password="True" />
                         </setting>
+
+                        <div class="mt16">
+                            <button name="test_sql_connection"
+                                type="object"
+                                string="Probar conexión"
+                                class="btn btn-primary" />
+                        </div>
 
                     </block>
 

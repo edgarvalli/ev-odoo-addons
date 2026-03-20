@@ -12,12 +12,19 @@ class ResConfigSettings(models.TransientModel):
     ev_mssql_username = fields.Char(string="Username")
     ev_mssql_password = fields.Char(string="Password")
 
-    def set_values(self):
+    from odoo import models
 
-        tools = self.env["ev.tools.mssql"]
+
+from odoo.exceptions import UserError
+
+
+class ResConfigSettings(models.TransientModel):
+    _inherit = "res.config.settings"
+
+    def test_sql_connection(self):
+        self.ensure_one()
 
         try:
-            # probar conexión con los valores ingresados
             with SqlServer(
                 dbname="master",
                 server=self.ev_mssql_server,
@@ -29,6 +36,22 @@ class ResConfigSettings(models.TransientModel):
 
         except Exception as e:
             raise UserError(f"No se pudo conectar a SQL Server:\n{str(e)}")
+
+        # ✅ Si todo salió bien
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": "Conexión exitosa",
+                "message": "La conexión a SQL Server fue correcta",
+                "type": "success",
+                "sticky": False,
+            },
+        }
+
+    def set_values(self):
+
+        tools = self.env["ev.tools.mssql"]
 
         # si pasa la prueba guarda
         super().set_values()
