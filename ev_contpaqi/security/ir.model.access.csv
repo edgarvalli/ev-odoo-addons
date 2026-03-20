@@ -1,2 +1,7 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_ev_contpaqi_empresas_admin,access.ev.contpaqi.empresas.admin,model_ev_contpaqi_empresas,base.group_system,1,1,1,1
+access_ev_contpaqi_empresas_user,access.ev.contpaqi.empresas.user,model_ev_contpaqi_empresas,base.group_user,1,0,0,0
+access_ev_contpaqi_comercial_admin,access.ev.contpaqi.comercial.admin,model_ev_contpaqi_comercial,base.group_system,1,1,1,1
+access_ev_contpaqi_comercial_user,access.ev.contpaqi.comercial.user,model_ev_contpaqi_comercial,base.group_user,1,0,0,0
+access_ev_contpaqi_nominas_admin,access.ev.contpaqi.nominas.admin,model_ev_contpaqi_nominas,base.group_system,1,1,1,1
+access_ev_contpaqi_nominas_user,access.ev.contpaqi.nominas.user,model_ev_contpaqi_nominas,base.group_user,1,0,0,0
