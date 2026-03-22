@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ev_catalogo_sat_system,access_ev_catalogo_sat_system,model_ev_catalogo_sat,base.group_system,1,1,1,1
+access_ev_comprobante_fiscal,access_ev_comprobante_fiscal,model_ev_comprobante_fiscal,base.group_system,1,1,1,1

@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="ev_catalogo_sat_view_list" model="ir.ui.view">
+        <field name="name">ev_catalogo_sat.view.list</field>
+        <field name="model">ev.catalogo.sat</field>
+        <field name="arch" type="xml">
+            <list string="Catalogo de SAT" editable="top" default_group_by="tipo">
+                <field name="tipo" readonly="True" />
+                <field name="clave"/>
+                <field name="descripcion" />
+                <field name="persona_fisica" />
+                <field name="persona_moral" />
+                <field name="retencion" />
+                <field name="traslado" />
+            </list>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,52 @@
+clave,clave_texto,descripcion,persona_fisica,persona_moral,retencion,traslado,tipo
+01,efectivo,Efectivo,0,0,0,0,1
+02,cheque,Cheque nominativo,0,0,0,0,1
+03,transferencia,Transferencia electrónica de fondos,0,0,0,0,1
+04,tarjeta_credito,Tarjeta de crédito,0,0,0,0,1
+05,monedero,Monedero electrónico,0,0,0,0,1
+06,dinero_electronico,Dinero electrónico,0,0,0,0,1
+08,vales,Vales de despensa,0,0,0,0,1
+12,dacion,Dación en pago,0,0,0,0,1
+13,pago_subrogacion,Pago por subrogación,0,0,0,0,1
+14,pago_consignacion,Pago por consignación,0,0,0,0,1
+15,condonacion,Condonación,0,0,0,0,1
+17,compensacion,Compensación,0,0,0,0,1
+23,novacion,Novación,0,0,0,0,1
+24,confusion,Confusión,0,0,0,0,1
+25,remision,Remisión de deuda,0,0,0,0,1
+26,prescripcion,Prescripción o caducidad,0,0,0,0,1
+27,satisfaccion_acreedor,A satisfacción del acreedor,0,0,0,0,1
+28,tarjeta_debito,Tarjeta de débito,0,0,0,0,1
+29,tarjeta_servicio,Tarjeta de servicios,0,0,0,0,1
+30,aplicacion_anticipos,Aplicación de anticipos,0,0,0,0,1
+31,intermediario,Intermediario pagos,0,0,0,0,1
+99,otro,Por definir,0,0,0,0,1
+PUE,pago_unico,Pago en una sola exhibición,0,0,0,0,0
+PPD,pago_diferido,Pago en parcialidades o diferido,0,0,0,0,0
+G01,adquisicion_mercancias,Adquisición de mercancías.,1,1,0,0,2
+G02,devolucion_desc_bonif,"Devoluciones, descuentos o bonificaciones.",1,1,0,0,2
+G03,gastos,Gastos en general.,1,1,0,0,2
+I01,construcciones,Construcciones.,1,1,0,0,2
+I02,mobilario,Mobiliario y equipo de oficina por inversiones.,1,1,0,0,2
+I03,equipo_transporte,Equipo de transporte.,1,1,0,0,2
+I04,equipo_computo,Equipo de computo y accesorios.,1,1,0,0,2
+I05,herramientas,"Dados, troqueles, moldes, matrices y herramental.",1,1,0,0,2
+I06,comunicaciones_telefonicas,Comunicaciones telefónicas.,1,1,0,0,2
+I07,comunicaciones_satelitales,Comunicaciones satelitales.,1,1,0,0,2
+I08,otra_maquinaria,Otra maquinaria y equipo.,1,1,0,0,2
+D01,gastos_medicos,"Honorarios médicos, dentales y gastos hospitalarios.",1,0,0,0,2
+D02,gastos_medicos_incapacidad,Gastos médicos por incapacidad o discapacidad.,1,0,0,0,2
+D03,gastos_funerales,Gastos funerales.,1,0,0,0,2
+D04,donativos,Donativos.,1,0,0,0,2
+D05,intereses_hipotecarios,Intereses reales efectivamente pagados por créditos hipotecarios (casa habitación).,1,0,0,0,2
+D06,aportaciones_sar,Aportaciones voluntarias al SAR.,1,0,0,0,2
+D07,primas_seguro_gastos_medicos,Primas por seguros de gastos médicos.,1,0,0,0,2
+D08,gastos_transportacion_escolar,Gastos de transportación escolar obligatoria.,1,0,0,0,2
+D09,depositos_ahorro,"Depósitos en cuentas para el ahorro, primas que tengan como base planes de pensiones.",1,0,0,0,2
+D10,colegiaturas,Pagos por servicios educativos (colegiaturas).,1,0,0,0,2
+S01,sin_efectos_fiscales,Sin efectos fiscales.,1,1,0,0,2
+CP01,pagos,Pagos,1,1,0,0,2
+CN01,nomina,Nómina,1,0,0,0,2
+001,ISR,Impuesto Sobre la Renta,0,0,1,0,3
+002,IVA,Impuesto al Valor Agregado,0,0,1,1,3
+003,IEPS,Impuesto Especial sobre Producción y Servicios,0,0,1,1,3

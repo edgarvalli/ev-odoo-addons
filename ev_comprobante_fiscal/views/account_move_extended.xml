@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="ev_account_move_extended_view" model="ir.ui.view">
+        <field name="name">ev_account_move_extended_view</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button
+                    string="Timbrar"
+                    type="object"
+                    name="ev_timbrar_factura"
+                    class="oe_highlight"
+                    groups="account.group_account_invoice"
+                    invisible="not id or state != 'posted'"
+                />
+                <button
+                    string="Cancelar"
+                    type="object"
+                    name="ev_timbrar_factura"
+                    invisible="not id"
+                    groups="account.group_account_invoice"
+                />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="ev_account_move_extended_notebook_view" model="ir.ui.view">
+        <field name="name">ev_account_move_extended_notebook_view</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page name="datos_sat" string="Datos SAT">
+                    <sheet>
+                        <group name="datos_generales" string="Datos SAT">
+                            <field name="ev_comprobante_id" readonly="True" />
+                        </group>
+                    </sheet>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

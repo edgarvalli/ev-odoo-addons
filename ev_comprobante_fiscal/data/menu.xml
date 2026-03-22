@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem
+        id="ev_fiscal_root_menu"
+        name="EV Fiscal"
+        parent="base.menu_administration"
+        sequence="10"/>
+
+    <menuitem
+        id="ev_fiscal_menu"
+        name="Catalogos SAT"
+        action="ev_catalogo_sat_action"
+        groups="base.group_system"
+        parent="ev_fiscal_root_menu"
+        sequence="3"/>
+
+</odoo>
