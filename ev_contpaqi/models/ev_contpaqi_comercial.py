@@ -1,7 +1,8 @@
-from odoo.models import AbstractModel
-from odoo.exceptions import UserError
 import logging
 from typing import List
+from odoo.models import AbstractModel
+from odoo.exceptions import UserError
+from ..types.comercial_types import ClienteDict
 
 _logger = logging.getLogger(__name__)
 
@@ -24,9 +25,9 @@ class Comercial(AbstractModel):
                 c.CRFC rfc,
                 c.CCURP curp,
                 CONCAT_WS(',',
-                    NULLIF(LTRIM(RTRIM(c.CEMAIL1)), ''),
-                    NULLIF(LTRIM(RTRIM(c.CEMAIL2)), ''),
-                    NULLIF(LTRIM(RTRIM(c.CEMAIL3)), '')
+                    NULLIF(TRIM(c.CEMAIL1), ''),
+                    NULLIF(TRIM(c.CEMAIL2), ''),
+                    NULLIF(TRIM(c.CEMAIL3), '')
                 ) AS emails,
                 m.CIDMONEDA [moneda.id],
                 m.CNOMBREMONEDA [moneda.nombre],
@@ -39,6 +40,16 @@ class Comercial(AbstractModel):
             INNER JOIN admClasificacionesValores cv ON cv.CIDVALORCLASIFICACION = c.CIDVALORCLASIFCLIENTE1
             WHERE {" AND ".join(conditions)}
         """
+
+    def _search_client(self, conditions=[], args=()) -> ClienteDict:
+        dbname = self.env.company.ev_contpaqi_comercial_db.dbname
+        if not dbname:
+            return None
+        sql = self._build_sql_cliente(conditions)
+
+        with self.env["ev.tools.mssql"].connect(dbname) as db:
+            result = db.fetchone(sql, args)
+            return self.env["ev.tools"].dict_parser(result)
 
     def empresas(self):
         sql = """
@@ -55,7 +66,7 @@ class Comercial(AbstractModel):
         except Exception as err:
             raise UserError(str(err))
 
-    def clientes(self, **kwargs):
+    def clientes(self, **kwargs) -> List[ClienteDict]:
 
         dbname = self.env.company.ev_contpaqi_comercial_db.dbname
 
@@ -95,31 +106,17 @@ class Comercial(AbstractModel):
         with self.env["ev.tools.mssql"].connect(dbname) as db:
             return db.fetchall(sql, tuple(args))
 
-    def buscar_cliente(self, codigo: str):
-        dbname = self.env.company.ev_contpaqi_comercial_db.dbname
-
-        if not dbname:
-            return None
-
+    def buscar_cliente(self, codigo: str) -> ClienteDict:
         conditions = ["c.CCODIGOCLIENTE = ?"]
-        sql = self._build_sql_cliente(conditions)
+        return self._search_client(conditions, (codigo,))
 
-        mssql = self.env["ev.tools.mssql"]
-        with mssql.connect(dbname) as db:
-            return db.fetchone(sql, (codigo,))
+    def buscar_cliente_rfc(self, rfc: str) -> ClienteDict:
+        conditions = ["c.CRFC = ?"]
+        return self._search_client(conditions, (rfc,))
 
-    def buscar_cliente_id(self, id: int):
-        dbname = self.env.company.ev_contpaqi_comercial_db.dbname
-
-        if not dbname:
-            return None
-
+    def buscar_cliente_id(self, id: int) -> ClienteDict:
         conditions = ["c.CIDCLIENTEPROVEEDOR = ?"]
-        sql = self._build_sql_cliente(conditions)
-
-        mssql = self.env["ev.tools.mssql"]
-        with mssql.connect(dbname) as db:
-            return db.fetchone(sql, (id,))
+        return self._search_client(conditions, (id,))
 
     def saldo_clientes(self, saldo_cero=True):
         """Funcion para obtener el estado de cuenta de los clientes"""
@@ -188,7 +185,7 @@ class Comercial(AbstractModel):
         with self.env["ev.tools.mssql"].connect(dbname) as db:
             return db.fetchall(sql)
 
-    def saldo_cliente_detalle(self, **kwargs):
+    def saldo_cliente_detalle(self, **kwargs) -> ClienteDict:
         """Funcion para obtener el estado de cuenta actual del cliente"""
         dbname = self.env.company.ev_contpaqi_comercial_db.dbname
 
@@ -255,8 +252,6 @@ class Comercial(AbstractModel):
             ORDER BY doc.CFECHA ASC;
         """
         with self.env["ev.tools.mssql"].connect(dbname) as db:
-            cliente = db.fetchone(
-                self._build_sql_cliente(conditions_cliente), tuple(args_cliente)
-            )
+            cliente = self._search_client(conditions_cliente, tuple(args_cliente))
             cliente["facturas"] = db.fetchall(sql, tuple(args))
             return self.env["ev.tools"].dict_parser(cliente)
