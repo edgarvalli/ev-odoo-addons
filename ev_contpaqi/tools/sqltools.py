@@ -1,3 +1,10 @@
+def get_pagination(**kwargs):
+    limit = int(kwargs.get("limit", 50))
+    page = int(kwargs.get("page", 1))
+    offset = ((page - 1) * limit) if page > 1 else 0
+    return offset, limit
+
+
 def empleado_query(dbname: str, kwargs: dict) -> tuple:
     query = f"""
         SELECT

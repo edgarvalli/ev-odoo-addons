@@ -1,6 +1,7 @@
 from odoo import models
 from ..services.mssql import SqlServer
 from types import SimpleNamespace
+from ..utils.sqltools import build_where_from_domain
 
 
 class EVMssql(models.AbstractModel):
@@ -51,3 +52,6 @@ class EVMssql(models.AbstractModel):
             password=config.password,
             instance=config.instance,
         )
+
+    def build_where(self, domain):
+        return build_where_from_domain(domain)

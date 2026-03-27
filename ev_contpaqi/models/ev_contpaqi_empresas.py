@@ -3,7 +3,7 @@ from odoo import models, fields
 
 class EVContpaqiEmpresas(models.Model):
     _name = "ev.contpaqi.empresas"
-    _description = "Contpaqi Empresas"
+    _description = "EV Contpaqi Empresas"
 
     _sql_constraints = [
         ("uniq_db_origin", "unique(dbname, system_origin)", "Ya existe esta empresa.")
