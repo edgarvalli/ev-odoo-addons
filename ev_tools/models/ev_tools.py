@@ -4,7 +4,6 @@ from typing import Dict
 from pathlib import Path
 from odoo.modules.module import get_module_path
 
-
 class EVTools(models.AbstractModel):
     _name = "ev.tools"
     _description = "Modulo con funciones comunes"

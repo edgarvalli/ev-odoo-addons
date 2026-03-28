@@ -1,13 +1,18 @@
-import logging
+from typing import List, Tuple, Union, Optional
 from dataclasses import dataclass
-from types import SimpleNamespace
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
 from odoo.orm.environments import Environment
-from ...tools.sqltools import get_pagination
-from ...tools.contpaqi_tools import get_dsl, get_dbname
-
-_logger = logging.getLogger(__name__)
+from ..tools.sqltools import get_pagination
+from ..tools.contpaqi_tools import get_dsl, get_dbname
+from ..types.comprobnate_type import (
+    NominaRow,
+    MetadataCfdi,
+    MovimientoNomina,
+    Comprobante,
+    ComprobanteWithXML,
+    ComprobantesParams,
+)
 
 
 @dataclass
@@ -16,7 +21,7 @@ class NominasService:
 
     ### HELPERS ###
 
-    def _get_nomina(self, db, dsl: str, id_documento: int):
+    def _get_nomina(self, db, dsl: str, id_documento: int) -> NominaRow:
 
         evtools = self.env["ev.tools"]
 
@@ -116,10 +121,11 @@ class NominasService:
         if not _doc:
             raise ValueError("No se encontro datos del documento.")
 
-        return evtools.dict_to_namespace(_doc)
+        return evtools.dict_parser(_doc)
 
-    def _get_nomina_detalle(self, db, dsl: str, guid_document: str):
-        evtools = self.env["ev.tools"]
+    def _get_nomina_detalle(
+        self, db, dsl: str, guid_document: str
+    ) -> Tuple[List[MovimientoNomina], List[MovimientoNomina]]:
 
         sql = f"""
             SELECT
@@ -148,23 +154,21 @@ class NominasService:
             WHERE GuidDocument=?
         """
 
-        percepciones = []
-        deducciones = []
+        percepciones: List[MovimientoNomina] = []
+        deducciones: List[MovimientoNomina] = []
 
-        moves = db.fetchall(sql, (guid_document,))
+        moves: List[MovimientoNomina] = db.fetchall(sql, (guid_document,))
 
         for item in moves:
 
-            obj = evtools.dict_to_namespace(item)
-            if obj.tipo == "D":
-                deducciones.append(obj)
+            if item.get("tipo") == "D":
+                deducciones.append(item)
             else:
-                percepciones.append(obj)
+                percepciones.append(item)
 
-        return SimpleNamespace(percepciones=percepciones, deducciones=deducciones)
+        return percepciones, deducciones
 
-    def _get_timbrado(self, db, dsl: str, guid_document: str) -> SimpleNamespace:
-        evtools = self.env["ev.tools"]
+    def _get_timbrado(self, db, dsl: str, guid_document: str) -> MetadataCfdi:
         sql = f"""
             SELECT
                 DocumentType type,
@@ -174,12 +178,12 @@ class NominasService:
             WHERE GuidDocument = ?
         """
 
-        result = db.fetchone(sql, (guid_document,))
+        cfdi: MetadataCfdi = db.fetchone(sql, (guid_document,))
 
-        if not result:
+        if not cfdi:
             raise ValueError("No se encontro el XML")
 
-        cfdi = evtools.dict_to_namespace(result)
+        # cfdi = evtools.dict_to_namespace(result)
 
         namespaces = {
             "cfdi": "http://www.sat.gob.mx/cfd/4",
@@ -187,7 +191,10 @@ class NominasService:
             "tfd": "http://www.sat.gob.mx/TimbreFiscalDigital",
         }
 
-        xml_content = cfdi.content
+        xml_content = cfdi.get("content", "")
+
+        if not xml_content:
+            raise ValueError("El XML está vacío")
 
         if isinstance(xml_content, bytes):
             xml_content = xml_content.decode("utf-8")
@@ -199,38 +206,38 @@ class NominasService:
             "PPD": "PPD - Pago en parcialidades o diferido",
         }
 
-        cfdi.metodo_pago = metodo_map.get(comprobante.get("MetodoPago"), "")
+        cfdi["metodo_pago"] = metodo_map.get(comprobante.get("MetodoPago"), "")
 
         timbrado = comprobante.find(".//tfd:TimbreFiscalDigital", namespaces)
 
         if timbrado is None:
             raise ValueError("El XML no contiene Timbre Fiscal Digital")
 
-        cfdi.no_certificado = comprobante.get("NoCertificado")
-        cfdi.sello = comprobante.get("Sello", "")
-        cfdi.certificado = comprobante.get("Certificado", "")
-        cfdi.version = comprobante.get("Version", "")
-        cfdi.uuid = timbrado.get("UUID", "")
+        cfdi["no_certificado"] = comprobante.get("NoCertificado")
+        cfdi["sello"] = comprobante.get("Sello", "")
+        cfdi["certificado"] = comprobante.get("Certificado", "")
+        cfdi["version"] = comprobante.get("Version", "")
+        cfdi["uuid"] = timbrado.get("UUID", "")
 
-        cfdi.timbre = SimpleNamespace()
+        timbre = cfdi.setdefault("timbre", {})
 
-        cfdi.timbre.no_certificado_sat = timbrado.get("NoCertificadoSAT", "")
-        cfdi.timbre.fecha = timbrado.get("FechaTimbrado", "")
-        cfdi.timbre.sello = timbrado.get("SelloCFD", "")
-        cfdi.timbre.sello_sat = timbrado.get("SelloSAT", "")
-        cfdi.timbre.version = timbrado.get("Version", "1.1")
-        cfdi.timbre.rfc_proveedor_certificador = timbrado.get("RfcProvCertif", "")
+        timbre["no_certificado_sat"] = timbrado.get("NoCertificadoSAT", "")
+        timbre["fecha"] = timbrado.get("FechaTimbrado", "")
+        timbre["sello"] = timbrado.get("SelloCFD", "")
+        timbre["sello_sat"] = timbrado.get("SelloSAT", "")
+        timbre["version"] = timbrado.get("Version", "1.1")
+        timbre["rfc_proveedor_certificador"] = timbrado.get("RfcProvCertif", "")
 
-        cfdi.timbre.complemento_certificacion = (
+        timbre["complemento_certificacion"] = (
             "||"
             + "|".join(
                 [
-                    cfdi.timbre.version,
-                    cfdi.uuid,
-                    cfdi.timbre.fecha,
-                    cfdi.timbre.rfc_proveedor_certificador,
-                    cfdi.timbre.sello,
-                    cfdi.timbre.no_certificado_sat,
+                    timbre["version"],
+                    cfdi["uuid"],
+                    timbre["fecha"],
+                    timbre["rfc_proveedor_certificador"],
+                    timbre["sello"],
+                    timbre["no_certificado_sat"],
                 ]
             )
             + "||"
@@ -238,32 +245,93 @@ class NominasService:
 
         return cfdi
 
+    def _build_sql_comprobante(
+        self,
+        db,
+        dbname: str,
+        conditions: Optional[list[str]] = None,
+        included_xml=False,
+        top: int = None,
+    ) -> str:
+
+        conditions = conditions or []
+        dsl = get_dsl(db, dbname, "nominas")
+
+        where_clause = ""
+        xml_clause = ""
+
+        if included_xml:
+            xml_clause = (
+                f"INNER JOIN [document_{dsl}_content].dbo.DocumentContent dc "
+                f"ON dc.GuidDocument = comprobante.GUIDDocumentoDSL"
+            )
+
+        if conditions:
+            where_clause = f"WHERE {' AND '.join(conditions)}"
+
+        fields = [
+            "iddocumento",
+            "idperiodo",
+            "FORMAT(FechaEmision,'yyyy-MM-dd HH:mm:ss') fechaemision",
+            "FORMAT(FechaPago,'yyyy-MM-dd HH:mm:ss') fechapago",
+            "FORMAT(FechaFinalPago,'yyyy-MM-dd HH:mm:ss') fechafinal",
+            "FORMAT(FechaInicialPago,'yyyy-MM-dd HH:mm:ss') fechainicial",
+            "NumDiasPagados diaspagados",
+            "comprobante.UUID uuid",
+            "GUIDDocumentoDSL guiddocdsl",
+            "GUIDDocumento guiddocumento",
+            "sbc",
+            "c.Total total",
+            "c.NombreEmisor nombreemisor",
+            "c.RFCEmisor rfcemisor",
+        ]
+
+        if included_xml:
+            fields.append("dc.Content content")
+
+        sql = f"""
+            SELECT {f'TOP {top}' if top else ''}
+                {','.join(fields)}
+            FROM [{dbname}].dbo.NOM10043 comprobante
+            {xml_clause}                    
+            INNER JOIN [document_{dsl}_metadata].dbo.Comprobante c
+                ON c.GuidDocument = comprobante.GUIDDocumentoDSL
+            {where_clause}
+            ORDER BY FechaEmision DESC
+        """
+        return sql
+
     ### METHODS ###
 
-    def datos_comprobante(self, id_documento: int):
+    def datos_comprobante(self, id_documento: int) -> NominaRow:
 
         try:
             dbname = get_dbname(self.env, "nominas")
             with self.env["ev.tools.mssql"].connect(dbname) as db:
 
-                dsl = get_dsl(self.env, dbname, sis_origen="nominas")
+                dsl = get_dsl(self.env, dbname,"nominas")
                 comprobante = self._get_nomina(db, dsl, id_documento)
-                detalle = self._get_nomina_detalle(db, dsl, comprobante.guid_document)
-                comprobante.cfdi = self._get_timbrado(
-                    db, dsl, comprobante.guid_document
+                guid_document = comprobante.get("guid_document")
+                percepciones, deducciones = self._get_nomina_detalle(
+                    db, dsl, guid_document
                 )
 
-                comprobante.percepciones = detalle.percepciones
-                comprobante.deducciones = detalle.deducciones
+                metadata = self._get_timbrado(db, dsl, guid_document)
 
-                total = f"{comprobante.totales.neto:.6f}"
-                sello = comprobante.cfdi.timbre.sello[-8:]
+                comprobante["cfdi"] = metadata
+                comprobante["deducciones"] = deducciones
+                comprobante["percepciones"] = percepciones
 
-                comprobante.sat_url = (
+                totales = comprobante.get("totales", {})
+                timbre = comprobante.get("cfdi", {}).get("timbre", {})
+                total = f"{totales.get('neto', 0):.6f}"
+                sello = (timbre.get("sello") or "")[-8:]
+
+                comprobante["sat_url"] = (
                     "https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx"
-                    f"?id={comprobante.uuid}"
-                    f"&re={comprobante.emisor.rfc}"
-                    f"&rr={comprobante.empleado.rfc}"
+                    f"?id={comprobante.get('uuid')}"
+                    f"&re={comprobante.get('emisor', {}).get('rfc', '')}"
+                    f"&rr={comprobante.get('empleado', {}).get('rfc', '')}"
                     f"&tt={total}"
                     f"&fe={sello}"
                 )
@@ -271,77 +339,75 @@ class NominasService:
                 return comprobante
 
         except Exception as err:
-            raise ValueError(f"Error obteniendo comprobante: {err}")
+            raise ValueError(f"Error obteniendo comprobante: {err}") from err
 
-    def comprobantes(self, **kwargs):
+    def get_comprobante(
+        self, iddocumento: int
+    ) -> Union[Comprobante, ComprobanteWithXML]:
+
+        try:
+
+            dbname = get_dbname(self.env, "nominas")
+            conditions = ["comprobante.IdDocumento = ?"]
+            args = (iddocumento,)
+
+            with self.env["ev.tools.mssql"].connect(dbname) as db:
+                sql = self._build_sql_comprobante(
+                    db, dbname=dbname, top=1, conditions=conditions
+                )
+                return db.fetchone(sql, args)
+
+        except Exception as e:
+            raise ValueError(str(e))
+
+    def comprobantes(
+        self, **kwargs: ComprobantesParams
+    ) -> Union[List[Comprobante], List[ComprobanteWithXML]]:
 
         page, limit = get_pagination(**kwargs)
         offset = ((page - 1) * limit) if page > 1 else 0
-        idempleado = kwargs.pop("idempleado")
-        included_xml = kwargs.pop("xml", False)
+        idempleado = kwargs.get("idempleado")
+        included_xml = kwargs.get("xml", False)
+
+        if not idempleado:
+            raise ValueError("idempleado es requerido")
 
         try:
             dbname = get_dbname(self.env, "nominas")
-            with self.env["ev.tools.mssql"].connect(dbname) as db:
 
-                conditions = [
-                    "comprobante.IdEmpleado = ?",
-                    "comprobante.GUIDDocumentoDSL <> ''",
-                ]
+            conditions = [
+                "comprobante.IdEmpleado = ?",
+                "comprobante.GUIDDocumentoDSL <> ''",
+            ]
 
-                args = [idempleado]
+            args = [idempleado]
 
-                startdate = kwargs.get("startdate")
-                enddate = kwargs.get("enddate")
+            startdate = kwargs.get("startdate")
+            enddate = kwargs.get("enddate")
 
-                if startdate:
-                    enddate = enddate or datetime.now().strftime("%Y-%m-%d")
+            if startdate:
+                enddate = enddate or datetime.now().strftime("%Y-%m-%d")
 
+                try:
                     end_dt = datetime.strptime(enddate, "%Y-%m-%d") + timedelta(days=1)
+                except ValueError:
+                    raise ValueError("Formato de fecha inválido (YYYY-MM-DD)")
 
-                    conditions.append("FechaEmision >= ?")
-                    conditions.append("FechaEmision < ?")
+                conditions.append("FechaEmision >= ?")
+                conditions.append("FechaEmision < ?")
 
-                    args.append(startdate)
-                    args.append(end_dt.strftime("%Y-%m-%d"))
+                args.append(startdate)
+                args.append(end_dt.strftime("%Y-%m-%d"))
 
-                dsl = get_dsl(self.env, dbname, "nominas")
-                query = f"""
-                    SELECT 
-                        iddocumento,
-                        idperiodo,
-                        FORMAT(FechaEmision,'yyyy-MM-dd HH:mm:ss') fechaemision,
-                        FORMAT(FechaPago,'yyyy-MM-dd HH:mm:ss') fechapago,
-                        FORMAT(FechaFinalPago,'yyyy-MM-dd HH:mm:ss') fechafinal,
-                        FORMAT(FechaInicialPago,'yyyy-MM-dd HH:mm:ss') fechainicial,
-                        NumDiasPagados diaspagados,
-                        comprobante.UUID uuid,
-                        GUIDDocumentoDSL guiddocdsl,
-                        GUIDDocumento guiddocumento,
-                        sbc,
-                        c.Total total,
-                        c.NombreEmisor nombreemisor,
-                        c.RFCEmisor rfcemisor
-                        {",dc.Content content" if included_xml else ""}
-                    FROM [{dbname}].dbo.NOM10043 comprobante
-                    {
-                        f"INNER JOIN [document_{dsl}_content].dbo.DocumentContent dc ON dc.GuidDocument = comprobante.GUIDDocumentoDSL"
-                        if included_xml else ""
-                    }                    
-                    INNER JOIN [document_{dsl}_metadata].dbo.Comprobante c
-                        ON c.GuidDocument = comprobante.GUIDDocumentoDSL
-                    WHERE {" AND ".join(conditions)}
-                    ORDER BY FechaEmision DESC
-                    OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
-                """
+            args.append(offset)
+            args.append(limit)
 
-                args.append(offset)
-                args.append(limit)
-
-                print(query)
-                print(args)
-                return db.fetchall(query, tuple(args))
+            with self.env["ev.tools.mssql"].connect(dbname) as db:
+                base_sql = self._build_sql_comprobante(
+                    db, dbname, conditions, included_xml
+                )
+                sql = base_sql + " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
+                return db.fetchall(sql, tuple(args))
 
         except Exception as err:
-            print("hereeeeeeeeeeeeeeeeeeeeeeeeeee")
             raise ValueError(str(err))

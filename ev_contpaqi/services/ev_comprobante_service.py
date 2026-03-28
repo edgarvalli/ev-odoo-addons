@@ -1,5 +1,5 @@
 from odoo.orm.environments import Environment
-from .nominas_service import NominasService
+from .ev_cnomina_service import NominasService
 
 
 class EVComprobanteService:

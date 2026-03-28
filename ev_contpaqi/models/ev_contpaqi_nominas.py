@@ -21,14 +21,14 @@ class Nominas(AbstractModel):
             raise UserError(str(err))
 
     def obtener_dsl(self):
-        dbname = get_dbname(self.env)
+        dbname = get_dbname(self.env, "nominas")
         try:
-            return get_dsl(self.env, dbname, sis_origen="nominas")
+            return get_dsl(self.env, dbname,"nominas")
         except Exception as err:
             raise UserError(str(err))
 
     def empleados(self, **kwargs):
-        dbname = get_dbname(self.env)
+        dbname = get_dbname(self.env, "nominas")
         with self.env["ev.tools.mssql"].connect(dbname) as db:
             sql, args = empleado_query(dbname, kwargs=kwargs)
             return db.fetchall(sql, args)
@@ -50,6 +50,10 @@ class Nominas(AbstractModel):
     def comprobantes(self, **kwargs):
         srv = EVComprobanteService(self.env)
         return srv.nominas.comprobantes(**kwargs)
+    
+    def obtener_comprobante(self, idcomprobante):
+        srv = EVComprobanteService(self.env)
+        return srv.nominas.get_comprobante(idcomprobante)
 
     def verificar_pertenencia_comprobante(self, codigo: str, iddocumento: int):
         return verificar_pertenencia_comprobante(self.env, codigo, iddocumento)

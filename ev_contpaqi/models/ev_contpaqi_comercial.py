@@ -1,12 +1,9 @@
-import logging
 from typing import List
 from odoo.models import AbstractModel
 from odoo.exceptions import UserError
 from ..types.comercial_types import ClienteDict
 from ..tools.contpaqi_tools import get_dbname
 from ..services import EVClientesService
-
-_logger = logging.getLogger(__name__)
 
 
 class Comercial(AbstractModel):

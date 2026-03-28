@@ -1,9 +1,9 @@
 from odoo.orm.environments import Environment
-from typing import Literal
+from typing import Literal, Union, Any
 
 
 def get_dbname(
-    env: Environment, sistema=Literal["contabilidad", "conmercial", "nominas"]
+    env: Environment, sistema:Literal["contabilidad", "conmercial", "nominas"]
 ):
 
     if sistema == "comercial":
@@ -16,26 +16,37 @@ def get_dbname(
 
 
 def get_dsl(
-    env: Environment, dbname, sis_origen=Literal["comercial", "nominas", "contabilidad"]
+    env: Union[Environment | Any], dbname, sistema:Literal["comercial", "nominas", "contabilidad"]
 ):
 
-    if not sis_origen:
+    if not sistema:
         raise ValueError("Debe definir el tipo de sistema de Contpaqi")
+    
+    if not dbname:
+        raise ValueError("dbname es requerido")
 
-    if sis_origen == "comercial":
+    if sistema == "comercial":
         sql = "SELECT CGUIDDSL guiddsl FROM admParametros;"
-    elif sis_origen == "contabilidad":
+    elif sistema == "contabilidad":
         sql = "SELECT GuidDSL guiddsl FROM Parametros;"
-    elif sis_origen == "nominas":
+    elif sistema == "nominas":
         sql = "SELECT GUIDDSL guiddsl FROM nom10000;"
 
     else:
         raise ValueError("Debe definir el sistema origen correcto")
-
-    with env["ev.tools.mssql"].connect(dbname) as db:
+    
+    def _get(db):
         uid = db.fetchone(sql)
-
         if not uid:
             raise ValueError("No se encontro el GuidDSL")
 
         return uid["guiddsl"]
+    
+    if isinstance(env, Environment):
+        with env["ev.tools.mssql"].connect(dbname) as db:
+            return _get(db)
+
+    if hasattr(env, "fetchone"):
+        return _get(env)
+
+    raise TypeError("env debe ser Environment o conexión DB válida")
