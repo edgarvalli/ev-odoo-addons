@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ev_comrpobante_view_form" model="ir.ui.view">
+        <field name="name">ev_comrpobante.view.form</field>
+        <field name="model">ev.comprobante.fiscal</field>
+        <field name="arch" type="xml">
+            <form string="">
+                <sheet>
+                    <group name="general_data" string="Datos Generales">
+                        <group>
+                            <field name="tipo" readonly="True" />
+                            <field name="uso_cfdi_id" readonly="True" />
+                            <field name="metodo_pago_id" readonly="True" />
+                        </group>
+                        <group>
+                            <field name="estatus"
+                                widget="badge"
+                                statusbar_visible="sin_timbrar,timbrado,cancelado"
+                                decoration-success="estatus == 'timbrado'"
+                                decoration-danger="estatus == 'cancelado'"
+                                decoration-warning="estatus == 'sin_timbrar'" />
+                            <field name="uuid" readonly="True" />
+                            <field name="forma_pago_id" domain="forma_pago_domain" readonly="True" />
+                            <field name="forma_pago_domain" invisible="True" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

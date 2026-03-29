@@ -12,13 +12,14 @@
                     name="ev_timbrar_factura"
                     class="oe_highlight"
                     groups="account.group_account_invoice"
-                    invisible="not id or state != 'posted'"
+                    invisible="not id or state != 'posted' or ev_estatus in ('timbrado', 'cancelado')"
                 />
                 <button
-                    string="Cancelar"
+                    string="Cancelar Timbrado"
+                    class="btn btn-danger"
                     type="object"
-                    name="ev_timbrar_factura"
-                    invisible="not id"
+                    name="ev_cancelar_factura"
+                    invisible="not id or ev_estatus in ('sin_timbrar','cancelado')"
                     groups="account.group_account_invoice"
                 />
             </xpath>
@@ -33,8 +34,45 @@
             <xpath expr="//notebook" position="inside">
                 <page name="datos_sat" string="Datos SAT">
                     <sheet>
+
+                        <field name="ev_estatus"
+                            widget="statusbar"
+                            invisible="ev_estatus == 'cancelado'"
+                            statusbar_visible="sin_timbrar,timbrado"
+                            decoration-success="ev_estatus == 'timbrado'"
+                            decoration-warning="ev_estatus == 'sin_timbrar'" />
+                        
+                        <field
+                            name="ev_estatus"
+                            widget="statusbar"
+                            invisible="ev_estatus != 'cancelado'"
+                            statusbar_visible="cancelado"
+                            decoration-danger="ev_estatus == 'cancelado'"
+                        />
+
                         <group name="datos_generales" string="Datos SAT">
-                            <field name="ev_comprobante_id" readonly="True" />
+                            <group invisible="not ev_comprobante_id.uuid" colspan="2" col="2">
+                                <field name="ev_comprobante_id" readonly="True" string="UUID" />
+                                <field name="ev_forma_pago_domain" invisible="True" />
+                            </group>
+                            <group>
+                                <field
+                                    name="ev_metodo_pago_id"
+                                    readonly="ev_estatus != 'sin_timbrar'"
+                                />
+                                <field
+                                    name="ev_uso_cfdi_id"
+                                    readonly="ev_estatus != 'sin_timbrar'"
+                                />
+                            </group>
+                            <group>
+                                <field
+                                    name="ev_forma_pago_id"
+                                    domain="ev_forma_pago_domain"
+                                    invisible="not ev_metodo_pago_id.id"
+                                    readonly="ev_estatus != 'sin_timbrar'"
+                                />
+                            </group>
                         </group>
                     </sheet>
                 </page>

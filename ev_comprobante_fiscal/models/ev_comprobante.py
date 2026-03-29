@@ -4,6 +4,7 @@ from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
+
 class EVComprobante(models.Model):
     _name = "ev.comprobante.fiscal"
     _description = "[EV] Comprobante Fiscal"
@@ -17,6 +18,17 @@ class EVComprobante(models.Model):
     )
 
     uuid = fields.Char("UUID", index=True, copy=False, readonly=True)
+
+    estatus = fields.Selection(
+        string="Estatus CFDI",
+        readonly=True,
+        default="sin_timbrar",
+        selection=[
+            ("sin_timbrar", "Sin Timbrar"),
+            ("timbrado", "Timbrado"),
+            ("cancelado", "Cancelado"),
+        ],
+    )
 
     metodo_pago_id = fields.Many2one(
         comodel_name="ev.catalogo.sat",
@@ -36,6 +48,10 @@ class EVComprobante(models.Model):
         domain=[("tipo", "=", "2")],
     )
 
+    forma_pago_domain = fields.Binary(
+        "Forma de pag - Domain", compute="_compute_forma_pago"
+    )
+
     def _tipo_comprobante(self):
         return [
             ("I", "Ingreso"),
@@ -46,9 +62,24 @@ class EVComprobante(models.Model):
             ("R", "Retención"),
         ]
 
+    def _compute_forma_pago(self):
+
+        domain = [("tipo", "=", 1)]
+
+        if not self.forma_pago_id:
+            self.forma_pago_domain = domain
+            return
+
+        if self.forma_pago_id.clave == "PPD":
+            domain.append(("clave", "=", "99"))
+        else:
+            domain.append(("clave", "!=", "99"))
+
+        self.forma_pago_domain = domain
+
     @api.onchange("metodo_pago_id")
     def _onchange_metodo_pago(self):
-        
+
         _logger.warning(f"Metodo: {self.metodo_pago_id.clave}")
         self.forma_pago_id = False
 
