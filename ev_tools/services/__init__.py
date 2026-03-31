@@ -1,0 +1,2 @@
+from .ev_comprobante_ingreso import ComprobanteIngresoXML
+from .ev_comprobante_nominas import ComprobanteNominaXML

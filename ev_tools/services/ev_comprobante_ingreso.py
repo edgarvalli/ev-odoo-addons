@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Union, List, Optional, Dict
+from typing import Union, List, Optional
 from .ev_comprobante import BaseDTO, EmisorDTO, ReceptorDTO, ComprobanteBase
 
 
@@ -60,7 +60,7 @@ class TimbreDTO(BaseDTO):
 # =========================
 # MAIN
 # =========================
-class ComprobanteFacturaXML(ComprobanteBase):
+class ComprobanteIngresoXML(ComprobanteBase):
 
     def __init__(self, xml: Union[str, bytes, Path]):
         super().__init__(xml)

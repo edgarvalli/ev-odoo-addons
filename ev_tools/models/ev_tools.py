@@ -1,8 +1,9 @@
 from odoo import models
-from types import SimpleNamespace
-from typing import Dict
 from pathlib import Path
-from odoo.modules.module import get_module_path
+from types import SimpleNamespace
+from typing import Dict, Literal, Union
+from ..services import ComprobanteIngresoXML, ComprobanteNominaXML
+
 
 class EVTools(models.AbstractModel):
     _name = "ev.tools"
@@ -34,6 +35,15 @@ class EVTools(models.AbstractModel):
 
         return root
 
-    def module_path(self, module_name: str) -> Path:
-        module_path = get_module_path(module_name)
-        return Path(module_path)
+    def parse_xml_to_comprobante(
+        self, xml: Union[str, bytes, Path], type: Literal["ingreso", "nomina"]
+    ):
+
+        if type == "ingreso":
+            return ComprobanteIngresoXML(xml=xml)
+        elif type == "nomina":
+            return ComprobanteNominaXML(xml=xml)
+        else:
+            raise ValueError(
+                "Debe de definir un tipo de comprobante ('ingreso','nomina')"
+            )

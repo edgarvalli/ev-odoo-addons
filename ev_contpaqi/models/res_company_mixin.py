@@ -1,8 +1,4 @@
-from odoo import models, fields, api
-from odoo.exceptions import UserError
-import logging
-
-_logger = logging.getLogger(__name__)
+from odoo import models, fields
 
 
 class ResCompanyMixin(models.Model):
@@ -18,6 +14,6 @@ class ResCompanyMixin(models.Model):
         domain=[("system_origin", "=", "comercial")],
         string="Empresa Contpaqi Nominas",
     )
-    
+
     def sync_empresas(self):
         self.env["ev.contpaqi.empresas"].action_sync()

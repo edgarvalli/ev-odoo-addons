@@ -1,4 +1,5 @@
 from typing import TypedDict, Optional, Literal, List
+from datetime import datetime
 
 
 class Emisor(TypedDict):
@@ -97,15 +98,15 @@ class NominaRow(TypedDict):
     id_empleado: int
     id_periodo: int
     guid_document: str
-    fecha_completa: str
+    fecha_completa: datetime
     fecha: str
     hora: str
-    fecha_inicial_pago: str
-    fecha_final_pago: str
+    fecha_inicial_pago: datetime
+    fecha_final_pago: datetime
     ejercicio: int
     periodo: int
-    fecha_pago: str
-    fecha_pago_mes: int
+    fecha_pago: datetime
+    fecha_pago_mes: datetime
     ejercicio_pago: int
     dias_pagados: float
     uuid: str

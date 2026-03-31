@@ -1,3 +1,4 @@
+from typing import List
 from dataclasses import dataclass
 from odoo.orm.environments import Environment
 from ..types.empleado_type import EmpleadoDict
@@ -50,7 +51,7 @@ class EVEmpleadoService:
 
         return sql
 
-    def search(self, conditions=[], params: tuple = None) -> EmpleadoDict:
+    def search(self, conditions=[], params: tuple = None) -> List[EmpleadoDict]:
         try:
             dbname = get_dbname(self.env, "nominas")
             sql = self._build_query(dbname, conditions)

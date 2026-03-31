@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from odoo.orm.environments import Environment
 from ..tools.sqltools import get_pagination
 from ..tools.contpaqi_tools import get_dsl, get_dbname
-from ..types.comprobnate_type import (
+from ..types.comprobanate_type import (
     NominaRow,
     MetadataCfdi,
     MovimientoNomina,
@@ -14,12 +14,12 @@ from ..types.comprobnate_type import (
     ComprobantesParams,
 )
 
+# Lorena Hernandez Jimenez
+
 
 @dataclass
-class NominasService:
+class ComprobanteTools:
     env: Environment
-
-    ### HELPERS ###
 
     def _get_nomina(self, db, dsl: str, id_documento: int) -> NominaRow:
 
@@ -245,7 +245,47 @@ class NominasService:
 
         return cfdi
 
-    def _build_sql_comprobante(
+    def get_data_comprobante(self, id_documento: int):
+        try:
+            dbname = get_dbname(self.env, "nominas")
+            with self.env["ev.tools.mssql"].connect(dbname) as db:
+
+                dsl = get_dsl(self.env, dbname, "nominas")
+                comprobante = self._get_nomina(db, dsl, id_documento)
+                guid_document = comprobante.get("guid_document")
+                percepciones, deducciones = self._get_nomina_detalle(
+                    db, dsl, guid_document
+                )
+
+                metadata = self._get_timbrado(db, dsl, guid_document)
+
+                comprobante["cfdi"] = metadata
+                comprobante["deducciones"] = deducciones
+                comprobante["percepciones"] = percepciones
+
+                totales = comprobante.get("totales", {})
+                timbre = comprobante.get("cfdi", {}).get("timbre", {})
+                total = f"{totales.get('neto', 0):.6f}"
+                sello = (timbre.get("sello") or "")[-8:]
+
+                comprobante["sat_url"] = (
+                    "https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx"
+                    f"?id={comprobante.get('uuid')}"
+                    f"&re={comprobante.get('emisor', {}).get('rfc', '')}"
+                    f"&rr={comprobante.get('empleado', {}).get('rfc', '')}"
+                    f"&tt={total}"
+                    f"&fe={sello}"
+                )
+
+                return comprobante
+
+        except Exception as err:
+            raise ValueError(f"Error obteniendo comprobante: {err}") from err
+
+
+class ComprobanteNominaService(ComprobanteTools):
+
+    def _build_sql(
         self,
         db,
         dbname: str,
@@ -301,46 +341,6 @@ class NominasService:
         """
         return sql
 
-    ### METHODS ###
-
-    def datos_comprobante(self, id_documento: int) -> NominaRow:
-
-        try:
-            dbname = get_dbname(self.env, "nominas")
-            with self.env["ev.tools.mssql"].connect(dbname) as db:
-
-                dsl = get_dsl(self.env, dbname,"nominas")
-                comprobante = self._get_nomina(db, dsl, id_documento)
-                guid_document = comprobante.get("guid_document")
-                percepciones, deducciones = self._get_nomina_detalle(
-                    db, dsl, guid_document
-                )
-
-                metadata = self._get_timbrado(db, dsl, guid_document)
-
-                comprobante["cfdi"] = metadata
-                comprobante["deducciones"] = deducciones
-                comprobante["percepciones"] = percepciones
-
-                totales = comprobante.get("totales", {})
-                timbre = comprobante.get("cfdi", {}).get("timbre", {})
-                total = f"{totales.get('neto', 0):.6f}"
-                sello = (timbre.get("sello") or "")[-8:]
-
-                comprobante["sat_url"] = (
-                    "https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx"
-                    f"?id={comprobante.get('uuid')}"
-                    f"&re={comprobante.get('emisor', {}).get('rfc', '')}"
-                    f"&rr={comprobante.get('empleado', {}).get('rfc', '')}"
-                    f"&tt={total}"
-                    f"&fe={sello}"
-                )
-
-                return comprobante
-
-        except Exception as err:
-            raise ValueError(f"Error obteniendo comprobante: {err}") from err
-
     def get_comprobante(
         self, iddocumento: int
     ) -> Union[Comprobante, ComprobanteWithXML]:
@@ -352,9 +352,7 @@ class NominasService:
             args = (iddocumento,)
 
             with self.env["ev.tools.mssql"].connect(dbname) as db:
-                sql = self._build_sql_comprobante(
-                    db, dbname=dbname, top=1, conditions=conditions
-                )
+                sql = self._build_sql(db, dbname=dbname, top=1, conditions=conditions)
                 return db.fetchone(sql, args)
 
         except Exception as e:
@@ -403,9 +401,7 @@ class NominasService:
             args.append(limit)
 
             with self.env["ev.tools.mssql"].connect(dbname) as db:
-                base_sql = self._build_sql_comprobante(
-                    db, dbname, conditions, included_xml
-                )
+                base_sql = self._build_sql(db, dbname, conditions, included_xml)
                 sql = base_sql + " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
                 return db.fetchall(sql, tuple(args))
 
