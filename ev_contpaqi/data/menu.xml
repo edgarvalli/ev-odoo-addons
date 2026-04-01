@@ -16,5 +16,12 @@
         action="hr_department_action_server"
         sequence="91"
     />
+    <menuitem
+        id="menu_sync_puestos_contpaqi"
+        name="Sync Puestos Contpaqi"
+        parent="hr.menu_config_employee"
+        action="hr_job_action_server"
+        sequence="92"
+    />
 
 </odoo>

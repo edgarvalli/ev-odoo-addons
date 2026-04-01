@@ -14,8 +14,6 @@ from ..types.comprobanate_type import (
     ComprobantesParams,
 )
 
-# Lorena Hernandez Jimenez
-
 
 @dataclass
 class ComprobanteTools:
