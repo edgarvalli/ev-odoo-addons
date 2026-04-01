@@ -148,7 +148,10 @@ class ComprobanteTools:
 
                 ImporteGravado importe_gravado,
                 ImporteExento importe_exento,
-                Importe importe
+                CASE
+                    WHEN TipoNominaDetalle = 'DED' THEN Importe
+                    ELSE ISNULL(ImporteGravado, 0) + ISNULL(ImporteExento, 0)
+                END as importe
 
             FROM [document_{dsl}_metadata].dbo.Nomina_Detalle 
             WHERE GuidDocument=?

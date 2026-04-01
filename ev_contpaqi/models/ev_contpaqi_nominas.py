@@ -46,7 +46,7 @@ class Nominas(AbstractModel):
     def buscar_empleado_id(self, id: int) -> EmpleadoDict:
         try:
             srv = EVEmpleadoService(self.env)
-            return srv.get(["empleado.idempleado"], (id,))
+            return srv.get(["empleado.idempleado = ?"], (id,))
         except Exception as err:
             raise UserError(str(err))
 
@@ -60,8 +60,8 @@ class Nominas(AbstractModel):
         srv = EVComprobanteService(self.env)
         return srv.nominas.get_comprobante(idcomprobante)
 
-    def verificar_pertenencia_comprobante(self, codigo: str, iddocumento: int) -> bool:
-        return verificar_pertenencia_comprobante(self.env, codigo, iddocumento)
+    def verificar_pertenencia_comprobante(self, id: int, iddocumento: int) -> bool:
+        return verificar_pertenencia_comprobante(self.env, id, iddocumento)
 
     def datos_comprobante(self, id_documento: int) -> NominaRow:
         try:

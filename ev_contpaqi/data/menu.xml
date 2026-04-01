@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem
+        id="menu_sync_empleados_contpaqi"
+        name="Sync Empleados Contpaqi"
+        parent="hr.menu_config_employee"
+        action="hr_employee_action_server"
+        sequence="90"
+    />
+
+    <menuitem
+        id="menu_sync_departamentos_contpaqi"
+        name="Sync Departamentos Contpaqi"
+        parent="hr.menu_config_employee"
+        action="hr_department_action_server"
+        sequence="91"
+    />
+
+</odoo>
