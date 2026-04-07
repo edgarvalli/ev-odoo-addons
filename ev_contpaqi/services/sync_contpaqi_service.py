@@ -185,7 +185,6 @@ class SyncEmployeesService:
 
         return {
             "name": empleado["nombre"],
-            "work_email": empleado["email"],
             "department_id": dept.id if dept else False,
             "job_id": job.id if job else False,
             "ev_codigo": empleado["codigoempleado"],
