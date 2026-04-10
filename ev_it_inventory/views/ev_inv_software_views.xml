@@ -8,18 +8,12 @@
         <field name="name">ev.inv.software.list</field>
         <field name="model">ev.inv.software</field>
         <field name="arch" type="xml">
-            <list string="Software" default_order="expiration_date asc">
+            <list string="Software">
                 <field name="name" />
                 <field name="version" />
-                <field name="license_type" />
-                <field name="user_id" />
-                <field name="device_id" />
-                <field name="expiration_date" />
-                <field name="days_to_expire" />
                 <field name="used_seats" />
                 <field name="seats" />
                 <field name="cost" />
-                <field name="is_expired" />
             </list>
         </field>
     </record>
@@ -42,24 +36,14 @@
                         </h2>
                     </div>
 
-                    <!-- ALERTA -->
-                    <div class="alert alert-danger"
-                        invisible="not expiration_date or days_to_expire > renewal_reminder_days">
-                        ⚠️ Esta licencia vence en <field name="days_to_expire" class="fw-bold" />
-                        días. </div>
-
                     <group>
                         <group string="Información General">
                             <field name="vendor_id" />
                             <field name="supplier_id" />
                             <field name="invoice_number" />
-                            <field name="license_type" />
-                            <field name="license_key" />
                         </group>
 
                         <group string="Asignación">
-                            <field name="user_id" />
-                            <field name="device_id" />
                             <field name="company_id" />
                         </group>
                     </group>
@@ -68,12 +52,6 @@
                         <group>
                             <field name="seats" />
                             <field name="used_seats" />
-                            <field name="renewal_reminder_days" />
-                        </group>
-                        <group>
-                            <field name="purchase_date" />
-                            <field name="activation_date" />
-                            <field name="expiration_date" />
                         </group>
                     </group>
 
@@ -88,14 +66,48 @@
 
                         <page string="Licencias" invisible="not id">
                             <field name="license_ids">
-                                <list string="Licencias" editable="bottom">
+                                <list string="Licencias" delete="True">
                                     <field name="name" />
                                     <field name="license_key" />
                                     <field name="device_id" />
                                     <field name="user_id" />
                                     <field name="expiration_date" />
-                                    <field name="software_id" widget="many2one" readonly="True" />
+                                    <field
+                                        name="days_to_expire"
+                                        decoration-success="days_to_expire &gt; renewal_reminder_days"
+                                        decoration-warning="days_to_expire &lt; renewal_reminder_days and days_to_expire &gt; 10"
+                                        decoration-danger="days_to_expire &lt; 10"
+                                        readonly="1"
+                                    />
                                 </list>
+
+                                <form string="Licencia">
+                                    <sheet>
+                                        <div class="ot_title">
+                                            <h1>
+                                                <field name="name" />
+                                            </h1>
+                                        </div>
+
+                                        <group>
+                                            <group string="Licencia">
+                                                <field name="license_key" />
+                                                <field name="license_type" />
+                                            </group>
+                                            <group string="Asignación">
+                                                <field name="user_id" />
+                                                <field name="device_id" />
+                                            </group>
+                                        </group>
+                                        <group string="Vencimiento">
+                                            <field name="expiration_date" />
+                                            <field name="renewal_reminder_days" />
+                                        </group>
+
+                                        <separator string="Observaciones" />
+                                        <field name="notes" nolabel="1" />
+                                    </sheet>
+                                </form>
                             </field>
                         </page>
 
@@ -120,11 +132,6 @@
             <kanban default_group_by="license_type">
                 <field name="name" />
                 <field name="version" />
-                <field name="user_id" />
-                <field name="device_id" />
-                <field name="expiration_date" />
-                <field name="days_to_expire" />
-                <field name="is_expired" />
 
                 <templates>
                     <t t-name="card">
@@ -137,21 +144,6 @@
                             <div>
                                 <strong>Versión:</strong>
                                 <field name="version" />
-                            </div>
-
-                            <div>
-                                <strong>Usuario:</strong>
-                                <field name="user_id" />
-                            </div>
-
-                            <div>
-                                <strong>Equipo:</strong>
-                                <field name="device_id" />
-                            </div>
-
-                            <div>
-                                <strong>Vence:</strong>
-                                <field name="expiration_date" />
                             </div>
 
                         </div>
@@ -170,9 +162,6 @@
         <field name="arch" type="xml">
             <search string="Buscar Software">
                 <field name="name" />
-                <field name="user_id" />
-                <field name="device_id" />
-                <field name="license_type" />
             </search>
         </field>
     </record>

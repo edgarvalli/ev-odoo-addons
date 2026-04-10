@@ -124,4 +124,18 @@
         </field>
     </record>
 
+    <record id="view_ev_inv_devices_form_view_search" model="ir.ui.view">
+        <field name="name">view.ev.inv.devices.form.view.search</field>
+        <field name="model">ev.inv.devices</field>
+        <field name="arch" type="xml">
+            <search string="">
+                <field name="serial_number" />
+                <field name="user_id" />
+                <field name="type_id" />
+                <field name="vendor_id" />
+                <field name="hostname" />
+            </search>
+        </field>
+    </record>
+
 </odoo>

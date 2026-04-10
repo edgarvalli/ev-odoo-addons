@@ -20,7 +20,7 @@ class EVInvDevices(models.Model):
     observation = fields.Text("Observaciones")
     purchase_date = fields.Datetime("Fecha de Compra")
     warranty_date = fields.Datetime("Fecha de Garantía")
-    active = fields.Boolean("Activo")
+    active = fields.Boolean("Activo", default=True)
 
 
 class InvOperativeSystem(models.Model):

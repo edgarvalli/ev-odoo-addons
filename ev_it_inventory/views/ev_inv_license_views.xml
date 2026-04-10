@@ -5,13 +5,16 @@
         <field name="name">menu.ev.inv.license.view.tree</field>
         <field name="model">ev.inv.license</field>
         <field name="arch" type="xml">
-            <list string="Licencias">
+            <list string="Licencias" default_order="expiration_date asc">
                 <field name="name" />
                 <field name="license_key" />
+                <field name="license_type" />
                 <field name="device_id" />
                 <field name="user_id" />
                 <field name="expiration_date" />
+                <field name="days_to_expire" />
                 <field name="software_id" widget="many2one" />
+                <field name="days_to_expire" />
             </list>
         </field>
     </record>
