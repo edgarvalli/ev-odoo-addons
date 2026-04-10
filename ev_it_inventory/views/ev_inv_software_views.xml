@@ -68,7 +68,8 @@
 
                         <page string="Licencias" invisible="not id">
                             <field name="license_ids">
-                                <list string="Licencias" delete="True">
+                                <list string="Licencias" default_order="expiration_date asc"
+                                    delete="1">
                                     <field name="name" />
                                     <field name="license_key" />
                                     <field name="device_id" />

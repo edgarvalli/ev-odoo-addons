@@ -48,6 +48,7 @@ class EVInvSoftwareLicense(models.Model):
     _name = "ev.inv.license"
     _description = "EV - Licencias"
     _rec_name = "name"
+    _order = "expiration_date asc"
 
     name = fields.Char("Nombre")
     license_key = fields.Char("No. Licencia")
