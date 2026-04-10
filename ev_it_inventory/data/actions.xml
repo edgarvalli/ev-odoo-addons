@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_ev_inv_devices" model="ir.actions.act_window">
+        <field name="name">Dispositivos</field>
+        <field name="res_model">ev.inv.devices</field>
+        <field name="view_mode">list,form,kanban</field>
+    </record>
+
+    <record id="action_ev_inv_software" model="ir.actions.act_window">
+        <field name="name">Software</field>
+        <field name="res_model">ev.inv.software</field>
+        <field name="view_mode">list,form,kanban</field>
+        <!-- <field name="search_view_id" ref="view_ev_inv_software_search" /> -->
+    </record>
+
+    <record id="action_ev_devices_type" model="ir.actions.act_window">
+        <field name="name">Tipos de Dispositivo</field>
+        <field name="res_model">ev.devices.type</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_ev_inv_vendors" model="ir.actions.act_window">
+        <field name="name">Fabricantes</field>
+        <field name="res_model">ev.inv.vendors</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_ev_devices_model" model="ir.actions.act_window">
+        <field name="name">Modelos</field>
+        <field name="res_model">ev.devices.model</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_ev_inv_processors" model="ir.actions.act_window">
+        <field name="name">Procesadores</field>
+        <field name="res_model">ev.inv.processors</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_ev_operative_system" model="ir.actions.act_window">
+        <field name="name">Sistemas Operativos</field>
+        <field name="res_model">ev.operative.system</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_ev_inv_license" model="ir.actions.act_window">
+        <field name="name">Licencias</field>
+        <field name="res_model">ev.inv.license</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

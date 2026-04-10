@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="menu_ev_inv_license_view_tree" model="ir.ui.view">
+        <field name="name">menu.ev.inv.license.view.tree</field>
+        <field name="model">ev.inv.license</field>
+        <field name="arch" type="xml">
+            <list string="Licencias">
+                <field name="name" />
+                <field name="license_key" />
+                <field name="device_id" />
+                <field name="user_id" />
+                <field name="expiration_date" />
+                <field name="software_id" widget="many2one" />
+            </list>
+        </field>
+    </record>
+
+</odoo>

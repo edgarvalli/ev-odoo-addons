@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- LIST VIEW -->
+    <record id="view_ev_inv_devices_list" model="ir.ui.view">
+        <field name="name">ev.inv.devices.list</field>
+        <field name="model">ev.inv.devices</field>
+        <field name="arch" type="xml">
+            <list string="Dispositivos">
+                <field name="serial_number" />
+                <field name="user_id" />
+                <field name="type_id" />
+                <field name="vendor_id" />
+                <field name="device_model_id" />
+                <field name="hostname" />
+                <field name="processor_id" />
+                <field name="os_id" />
+            </list>
+        </field>
+    </record>
+
+    <!-- FORM VIEW -->
+    <record id="view_ev_inv_devices_form" model="ir.ui.view">
+        <field name="name">ev.inv.devices.form</field>
+        <field name="model">ev.inv.devices</field>
+        <field name="arch" type="xml">
+            <form string="Dispositivo">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="user_id" />
+                            <field name="type_id" />
+                            <field name="vendor_id" />
+                            <field name="device_model_id" domain="[('vendor_id', '=', vendor_id)]" />
+                        </group>
+                        <group>
+                            <field name="serial_number" />
+                            <field name="hostname" />
+                            <field name="processor_id" />
+                            <field name="os_id" />
+                        </group>
+                    </group>
+
+                    <group string="Especificaciones">
+                        <group>
+                            <field name="ram" />
+                            <field name="storage" />
+                            <field name="active" />
+                        </group>
+                    </group>
+
+                    <group string="Otros">
+                        <group>
+                            <field name="purchase_date" />
+                            <field name="warranty_date" />
+                            <field name="active" />
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Observaciones">
+                            <field name="observation" nolabel="1" />
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter reload_on_follower="True" />
+            </form>
+        </field>
+    </record>
+
+    <!-- KANBAN VIEW -->
+    <record id="view_ev_inv_devices_kanban" model="ir.ui.view">
+        <field name="name">ev.inv.devices.kanban</field>
+        <field name="model">ev.inv.devices</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="user_id" />
+                <field name="type_id" />
+                <field name="vendor_id" />
+                <field name="device_model_id" />
+                <field name="hostname" />
+                <field name="os_id" />
+
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_card p-3">
+                            <div class="fw-bold fs-5">
+                                <field name="serial_number" />
+                            </div>
+
+                            <div>
+                                <strong>Usuario:</strong>
+                                <field name="user_id" />
+                            </div>
+
+                            <div>
+                                <strong>Tipo:</strong>
+                                <field name="type_id" />
+                            </div>
+
+                            <div>
+                                <strong>Marca:</strong>
+                                <field name="vendor_id" />
+                            </div>
+
+                            <div>
+                                <strong>Modelo:</strong>
+                                <field name="device_model_id" />
+                            </div>
+
+                            <div>
+                                <strong>Hostname:</strong>
+                                <field name="hostname" />
+                            </div>
+
+                            <div>
+                                <strong>SO:</strong>
+                                <field name="os_id" />
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+</odoo>

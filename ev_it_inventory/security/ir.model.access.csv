@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ev_inv_devices_admin,ev.inv.devices admin,model_ev_inv_devices,base.group_system,1,1,1,1
+access_ev_operative_system_admin,ev.operative.system admin,model_ev_operative_system,base.group_system,1,1,1,1
+access_ev_inv_processors_admin,ev.inv.processors admin,model_ev_inv_processors,base.group_system,1,1,1,1
+access_ev_devices_model_admin,ev.devices.model admin,model_ev_devices_model,base.group_system,1,1,1,1
+access_ev_inv_vendors_admin,ev.inv.vendors admin,model_ev_inv_vendors,base.group_system,1,1,1,1
+access_ev_devices_type_admin,ev.devices.type admin,model_ev_devices_type,base.group_system,1,1,1,1
+access_ev_inv_software_admin,ev.inv.software admin,model_ev_inv_software,base.group_system,1,1,1,1
+access_ev_inv_license_admin,ev.inv.license admin,model_ev_inv_license,base.group_system,1,1,1,1

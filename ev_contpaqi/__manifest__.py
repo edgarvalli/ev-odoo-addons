@@ -3,7 +3,7 @@
     "author": "Edgar Valli",
     "license": "LGPL-3",
     "description": """
-        Modulo para conectar Odoo con Contpai
+        Modulo para conectar Odoo con Contpaqi
     """,
     "depends": ["base", "ev_tools", "hr", "sale"],
     "data": [

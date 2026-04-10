@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- =========================
+         LIST VIEW
+    ========================== -->
+    <record id="view_ev_inv_software_list" model="ir.ui.view">
+        <field name="name">ev.inv.software.list</field>
+        <field name="model">ev.inv.software</field>
+        <field name="arch" type="xml">
+            <list string="Software" default_order="expiration_date asc">
+                <field name="name" />
+                <field name="version" />
+                <field name="license_type" />
+                <field name="user_id" />
+                <field name="device_id" />
+                <field name="expiration_date" />
+                <field name="days_to_expire" />
+                <field name="used_seats" />
+                <field name="seats" />
+                <field name="cost" />
+                <field name="is_expired" />
+            </list>
+        </field>
+    </record>
+
+    <!-- =========================
+         FORM VIEW
+    ========================== -->
+    <record id="view_ev_inv_software_form" model="ir.ui.view">
+        <field name="name">ev.inv.software.form</field>
+        <field name="model">ev.inv.software</field>
+        <field name="arch" type="xml">
+            <form string="Software">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                        <h2>
+                            <field name="version" />
+                        </h2>
+                    </div>
+
+                    <!-- ALERTA -->
+                    <div class="alert alert-danger"
+                        invisible="not expiration_date or days_to_expire > renewal_reminder_days">
+                        ⚠️ Esta licencia vence en <field name="days_to_expire" class="fw-bold" />
+                        días. </div>
+
+                    <group>
+                        <group string="Información General">
+                            <field name="vendor_id" />
+                            <field name="supplier_id" />
+                            <field name="invoice_number" />
+                            <field name="license_type" />
+                            <field name="license_key" widget="password_field" />
+                        </group>
+
+                        <group string="Asignación">
+                            <field name="user_id" />
+                            <field name="device_id" />
+                            <field name="company_id" />
+                        </group>
+                    </group>
+
+                    <group string="Licenciamiento">
+                        <group>
+                            <field name="seats" />
+                            <field name="used_seats" />
+                            <field name="renewal_reminder_days" />
+                        </group>
+                        <group>
+                            <field name="purchase_date" />
+                            <field name="activation_date" />
+                            <field name="expiration_date" />
+                        </group>
+                    </group>
+
+                    <group string="Finanzas">
+                        <group>
+                            <field name="cost" />
+                            <field name="currency_id" />
+                        </group>
+                    </group>
+
+                    <notebook>
+
+                        <page string="Licencias" invisible="not id">
+                            <field name="license_ids">
+                                <list string="Licencias" editable="bottom">
+                                    <field name="name" />
+                                    <field name="license_key" widget="password_field" />
+                                    <field name="device_id" />
+                                    <field name="user_id" />
+                                    <field name="expiration_date" />
+                                    <field name="software_id" widget="many2one" readonly="True" />
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="Observaciones">
+                            <field name="notes" nolabel="1" />
+                        </page>
+
+                    </notebook>
+                </sheet>
+                <chatter reload_on_follower="True" />
+            </form>
+        </field>
+    </record>
+
+    <!-- =========================
+         KANBAN VIEW
+    ========================== -->
+    <record id="view_ev_inv_software_kanban" model="ir.ui.view">
+        <field name="name">ev.inv.software.kanban</field>
+        <field name="model">ev.inv.software</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="license_type">
+                <field name="name" />
+                <field name="version" />
+                <field name="user_id" />
+                <field name="device_id" />
+                <field name="expiration_date" />
+                <field name="days_to_expire" />
+                <field name="is_expired" />
+
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_card p-3">
+
+                            <div class="fw-bold fs-5">
+                                <field name="name" />
+                            </div>
+
+                            <div>
+                                <strong>Versión:</strong>
+                                <field name="version" />
+                            </div>
+
+                            <div>
+                                <strong>Usuario:</strong>
+                                <field name="user_id" />
+                            </div>
+
+                            <div>
+                                <strong>Equipo:</strong>
+                                <field name="device_id" />
+                            </div>
+
+                            <div>
+                                <strong>Vence:</strong>
+                                <field name="expiration_date" />
+                            </div>
+
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- =========================
+         SEARCH / DASHBOARD FILTERS
+    ========================== -->
+    <record id="view_ev_inv_software_view_search" model="ir.ui.view">
+        <field name="name">ev.inv.software.search</field>
+        <field name="model">ev.inv.software</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Software">
+                <field name="name" />
+                <field name="user_id" />
+                <field name="device_id" />
+                <field name="license_type" />
+            </search>
+        </field>
+    </record>
+
+</odoo>

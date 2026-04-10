@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- =========================
+         MENU RAIZ
+    ========================== -->
+    <menuitem
+        id="menu_ev_inventory_root"
+        name="Inventario TI"
+        sequence="10" />
+
+    <!-- =========================
+         DISPOSITIVOS
+    ========================== -->
+    <menuitem
+        id="menu_ev_inv_devices"
+        name="Dispositivos"
+        parent="menu_ev_inventory_root"
+        action="action_ev_inv_devices"
+        sequence="1" />
+
+    <!-- =========================
+         SOFTWARE
+    ========================== -->
+    <menuitem
+        id="menu_ev_inv_software"
+        name="Software"
+        parent="menu_ev_inventory_root"
+        action="action_ev_inv_software"
+        sequence="2" />
+
+    <!-- =========================
+         CONFIGURACION
+    ========================== -->
+    <menuitem
+        id="menu_ev_inventory_config"
+        name="Configuración"
+        parent="menu_ev_inventory_root"
+        sequence="99" />
+
+    <!-- =========================
+         CATALOGOS
+    ========================== -->
+    <menuitem
+        id="menu_ev_devices_type"
+        name="Tipos"
+        parent="menu_ev_inventory_config"
+        action="action_ev_devices_type"
+        sequence="1" />
+
+    <menuitem
+        id="menu_ev_inv_vendors"
+        name="Fabricantes"
+        parent="menu_ev_inventory_config"
+        action="action_ev_inv_vendors"
+        sequence="2" />
+
+    <menuitem
+        id="menu_ev_devices_model"
+        name="Modelos"
+        parent="menu_ev_inventory_config"
+        action="action_ev_devices_model"
+        sequence="3" />
+
+    <menuitem
+        id="menu_ev_inv_processors"
+        name="Procesadores"
+        parent="menu_ev_inventory_config"
+        action="action_ev_inv_processors"
+        sequence="4" />
+
+    <menuitem
+        id="menu_ev_operative_system"
+        name="Sistemas Operativos"
+        parent="menu_ev_inventory_config"
+        action="action_ev_operative_system"
+        sequence="5" />
+
+    <menuitem
+        id="menu_ev_inv_license"
+        name="Licencias"
+        action="action_ev_inv_license"
+        parent="menu_ev_inventory_config"
+        sequence="6" />
+
+</odoo>
