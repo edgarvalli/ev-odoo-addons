@@ -12,9 +12,14 @@
                 <field name="device_id" />
                 <field name="user_id" />
                 <field name="expiration_date" />
-                <field name="days_to_expire" />
+                <field
+                    name="days_to_expire"
+                    decoration-success="days_to_expire &gt; renewal_reminder_days"
+                    decoration-warning="days_to_expire &lt; renewal_reminder_days and days_to_expire &gt; 10"
+                    decoration-danger="days_to_expire &lt; 10"
+                    readonly="1"
+                />
                 <field name="software_id" widget="many2one" />
-                <field name="days_to_expire" />
             </list>
         </field>
     </record>
