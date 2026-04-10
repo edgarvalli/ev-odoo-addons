@@ -4,13 +4,13 @@
     <record id="action_ev_inv_devices" model="ir.actions.act_window">
         <field name="name">Dispositivos</field>
         <field name="res_model">ev.inv.devices</field>
-        <field name="view_mode">list,form,kanban</field>
+        <field name="view_mode">kanban,list,form</field>
     </record>
 
     <record id="action_ev_inv_software" model="ir.actions.act_window">
         <field name="name">Software</field>
         <field name="res_model">ev.inv.software</field>
-        <field name="view_mode">list,form,kanban</field>
+        <field name="view_mode">kanban,list,form</field>
         <!-- <field name="search_view_id" ref="view_ev_inv_software_search" /> -->
     </record>
 

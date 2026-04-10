@@ -5,7 +5,7 @@ class EVInvSoftware(models.Model):
     _name = "ev.inv.software"
     _description = "EV - Software"
     _rec_name = "name"
-    _inherit = ["mail.thread", "mail.activity.mixin"]
+    _inherit = ["mail.thread", "mail.activity.mixin", "image.mixin"]
 
     name = fields.Char("Software", required=True)
     version = fields.Char("Versión")

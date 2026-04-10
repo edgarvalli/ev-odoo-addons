@@ -29,6 +29,14 @@
         <field name="arch" type="xml">
             <form string="Software">
                 <sheet>
+                    <div class="o_employee_avatar ms-2 p-0">
+                        <field
+                            name="image_1920"
+                            widget="image"
+                            class="oe_avatar"
+                            options="{'preview_image': 'image_128'}"
+                        />
+                    </div>
                     <div class="oe_title">
                         <h1>
                             <field name="name" />
@@ -132,15 +140,41 @@
         <field name="name">ev.inv.software.kanban</field>
         <field name="model">ev.inv.software</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="license_type">
+            <kanban>
                 <field name="name" />
                 <field name="version" />
+                <field name="image_128" />
+                <field name="image_1024" />
 
                 <templates>
                     <t t-name="card">
+                        <aside class="o_kanban_aside_full">
+                            <t t-if="record.image_1024.raw_value">
+                                <field name="image_1024" widget="background_image"
+                                    options="{'zoom': true, 'zoom_delay': 1000, 'preview_image':'image_128'}"
+                                    class="d-block position-relative" />
+                            </t>
+                            <t t-elif="record.image_128.raw_value">
+                                <field name="image_128" widget="background_image"
+                                    options="{'zoom': true, 'zoom_delay': 1000}"
+                                    class="d-block position-relative" />
+                            </t>
+                            <div t-else=""
+                                class="d-flex align-items-center justify-content-center bg-100 bg-gradient">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-75 h-75 opacity-50"
+                                    viewBox="0 0 20 20">
+                                    <g fill="currentColor">
+                                        <path
+                                            d="M 10 11 C 4.08 11 2 14 2 16 L 2 19 L 18 19 L 18 16 C 18 14 15.92 11 10 11 Z" />
+                                        <circle cx="10" cy="5.5" r="4.5" />
+                                    </g>
+                                </svg>
+                            </div>
+                        </aside>
                         <div class="oe_kanban_card p-3">
 
                             <div class="fw-bold fs-5">
+                                <i class="fa-solid fa-person"></i>
                                 <field name="name" />
                             </div>
 

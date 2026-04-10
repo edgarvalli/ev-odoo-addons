@@ -5,7 +5,7 @@ class EVInvDevices(models.Model):
     _name = "ev.inv.devices"
     _description = "EV - Dispositivos"
     _rec_name = "serial_number"
-    _inherit = ["mail.thread", "mail.activity.mixin"]
+    _inherit = ["mail.thread", "mail.activity.mixin", "image.mixin"]
 
     serial_number = fields.Char("No. Serie", index=True)
     user_id = fields.Many2one(comodel_name="res.users", string="Usuario")

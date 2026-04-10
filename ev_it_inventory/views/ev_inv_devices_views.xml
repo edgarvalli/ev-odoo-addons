@@ -26,6 +26,16 @@
         <field name="arch" type="xml">
             <form string="Dispositivo">
                 <sheet>
+
+                    <div class="ms-2 p-0">
+                        <field
+                            name="image_1920"
+                            widget="image"
+                            class="oe_avatar"
+                            options="{'preview_image': 'image_128'}"
+                        />
+                    </div>
+
                     <group>
                         <group>
                             <field name="user_id" />
@@ -72,49 +82,74 @@
         <field name="name">ev.inv.devices.kanban</field>
         <field name="model">ev.inv.devices</field>
         <field name="arch" type="xml">
-            <kanban>
+            <kanban class="o_kanban_mobile">
+                <field name="serial_number" />
                 <field name="user_id" />
                 <field name="type_id" />
                 <field name="vendor_id" />
                 <field name="device_model_id" />
                 <field name="hostname" />
                 <field name="os_id" />
+                <field name="image_128" />
+                <field name="image_1024" />
 
                 <templates>
                     <t t-name="card">
-                        <div class="oe_kanban_card p-3">
-                            <div class="fw-bold fs-5">
-                                <field name="serial_number" />
+                        <div
+                            class="oe_kanban_global_click o_kanban_card rounded-4 shadow-sm overflow-hidden">
+
+                            <!-- Imagen -->
+                            <div class="position-relative" style="height: 150px;">
+                                <t t-if="record.image_1024.raw_value">
+                                    <field
+                                        name="image_1024"
+                                        widget="background_image"
+                                        class="w-100 h-100"
+                                        options="{'preview_image':'image_128'}"
+                                    />
+                                </t>
+                                <t t-else="">
+                                    <div
+                                        class="w-100 h-100 d-flex align-items-center justify-content-center bg-light">
+                                        <i class="fa fa-laptop fa-3x text-muted" />
+                                    </div>
+                                </t>
                             </div>
 
-                            <div>
-                                <strong>Usuario:</strong>
-                                <field name="user_id" />
-                            </div>
+                            <!-- Contenido -->
+                            <div class="p-3">
+                                <div class="fw-bold fs-5 text-truncate mb-2">
+                                    <field name="serial_number" />
+                                </div>
 
-                            <div>
-                                <strong>Tipo:</strong>
-                                <field name="type_id" />
-                            </div>
+                                <div class="small text-muted mb-1">
+                                    <i class="fa fa-user me-1" />
+                                    <field name="user_id" />
+                                </div>
 
-                            <div>
-                                <strong>Marca:</strong>
-                                <field name="vendor_id" />
-                            </div>
+                                <div class="small mb-1">
+                                    <strong>Tipo:</strong>
+                                    <field name="type_id" />
+                                </div>
 
-                            <div>
-                                <strong>Modelo:</strong>
-                                <field name="device_model_id" />
-                            </div>
+                                <div class="small mb-1">
+                                    <strong>Marca:</strong>
+                                    <field name="vendor_id" />
+                                </div>
 
-                            <div>
-                                <strong>Hostname:</strong>
-                                <field name="hostname" />
-                            </div>
+                                <div class="small mb-1">
+                                    <strong>Modelo:</strong>
+                                    <field name="device_model_id" />
+                                </div>
 
-                            <div>
-                                <strong>SO:</strong>
-                                <field name="os_id" />
+                                <div class="mt-2">
+                                    <span class="badge rounded-pill text-bg-secondary me-1">
+                                        <field name="hostname" />
+                                    </span>
+                                    <span class="badge rounded-pill text-bg-info">
+                                        <field name="os_id" />
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </t>
