@@ -46,7 +46,7 @@ class EVInvSoftware(models.Model):
 
 class EVInvSoftwareLicense(models.Model):
     _name = "ev.inv.license"
-    _description = "EV - Licnecias"
+    _description = "EV - Licencias"
     _rec_name = "name"
 
     name = fields.Char("Nombre")
