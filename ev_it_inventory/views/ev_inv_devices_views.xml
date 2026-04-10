@@ -45,7 +45,6 @@
                         <group>
                             <field name="ram" />
                             <field name="storage" />
-                            <field name="active" />
                         </group>
                     </group>
 
