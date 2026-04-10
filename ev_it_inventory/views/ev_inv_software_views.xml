@@ -11,6 +11,8 @@
             <list string="Software">
                 <field name="name" />
                 <field name="version" />
+                <field name="vendor_id" />
+                <field name="company_id" />
                 <field name="used_seats" />
                 <field name="seats" />
                 <field name="cost" />
