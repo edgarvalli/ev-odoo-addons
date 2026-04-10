@@ -16,6 +16,7 @@
         "data/actions.xml",
         # menus al final
         "data/menu.xml",
+        "templates/email_template_license_expiry.xml",
     ],
     "assets": {"web.assets_backend": ["ev_it_inventory/static/src/**/*"]},
     "application": True,

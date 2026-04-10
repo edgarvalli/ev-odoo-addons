@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="email_template_license_expiry" model="mail.template">
+        <field name="name">Licencias por vencer</field>
+        <field name="model_id" ref="model_ev_inv_license" />
+        <field name="subject">⚠️ Licencias próximas a vencer</field>
+        <field name="body_html">
+        <![CDATA[
+        <h3>Licencias próximas a vencer</h3>
+        <p>Favor de revisar las siguientes licencias:</p>
+        <table style="border-collapse:collapse; width:100%;">
+            <thead>
+                <t
+                    t-set="col_style"
+                    t-value="'padding:8px;font-weight: bold;'"
+                />
+                <tr>
+                    <th t-att-style="col_style">Nombre</th>
+                    <th t-att-style="col_style">Licencia</th>
+                    <th t-att-style="col_style">Usuario</th>
+                    <th t-att-style="col_style">Fecha Vigencia</th>
+                </tr>
+            </thead>
+            <tbody>
+                <t t-foreach="ctx.get('licenses')" t-as="lic">
+                    <tr>
+                        <td>
+                            <t t-out="lic.name"/>
+                        </td>
+                        <td>
+                            <t t-out="lic.license_key"/>
+                        </td>
+                        <td>
+                            <t t-out="lic.user_id.name"/>
+                        </td>
+                        <td>
+                            <t t-out="lic.expiration_date"/>
+                        </td>
+                    </td>
+                </t>
+            </tbody>
+        </table>
+        <t t-out="ctx.get('licenses_html')"/>
+        ]]>
+    </field>
+    </record>
+
+</odoo>

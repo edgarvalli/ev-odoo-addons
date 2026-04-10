@@ -7,4 +7,5 @@ from .ev_inv_devices import (
     DevicesModel,
 )
 
-from .ev_inv_software import EVInvSoftware, EVInvSoftwareLicense
+from .ev_inv_software import EVInvSoftware
+from .ev_inv_license import EVInvSoftwareLicense
