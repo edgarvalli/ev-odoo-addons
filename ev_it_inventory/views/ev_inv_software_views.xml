@@ -54,7 +54,7 @@
                             <field name="supplier_id" />
                             <field name="invoice_number" />
                             <field name="license_type" />
-                            <field name="license_key" widget="password_field" />
+                            <field name="license_key" />
                         </group>
 
                         <group string="Asignación">
@@ -90,7 +90,7 @@
                             <field name="license_ids">
                                 <list string="Licencias" editable="bottom">
                                     <field name="name" />
-                                    <field name="license_key" widget="password_field" />
+                                    <field name="license_key" />
                                     <field name="device_id" />
                                     <field name="user_id" />
                                     <field name="expiration_date" />
