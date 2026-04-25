@@ -1,7 +1,10 @@
 declare module "@odoo/owl" {
-  export class Component<P = any, E = any> {
-    props: P;
-    env: E;
+  export class Component<P = any> {
+    static props?: P;
+    static template?: string;
+    static xml?: string;
+    static componets?: Record<string, any>;
+    
     setup(): void;
   }
 
