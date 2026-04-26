@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="action_ev_dev" model="ir.actions.act_window">
+        <field name="name">Ev Dev Action</field>
+        <field name="res_model">ev.dev</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <menuitem id="ev_dev_root_menu" name="EV Dev">
+        <menuitem
+            id="ev_dev_menu"
+            name="EV Dev"
+            action="action_ev_dev"
+            sequence="0"/>
+    </menuitem>
+</odoo>

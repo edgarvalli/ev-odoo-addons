@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="ev_dev.UserList">
+    <div>
+        <t t-if="state.name">
+            <t t-esc="state.name"/>
+        </t>
+        <t t-else="">
+            Sin usuario
+        </t>
+    </div>
+    <nav>
+        <ul class="list-group">
+            <t t-foreach="state.users" t-as="user" t-key="user.id">
+                <li class="list-group-item">
+                    <t t-out="user.name"/>
+                </li>
+            </t>
+        </ul>
+    </nav>
+</t>
+</templates>
