@@ -6,15 +6,10 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
  * @typedef {import("@web/views/fields/standard_field_props").StandardFieldProps} StandardFieldProps
  */
 
-/**
- * @typedef {Object} User
- * @property {number} id
- * @property {string} name
- */
 
 /**
  * @typedef {Object} StateType
- * @property {User[]} users
+ * @property {import("../../types/models/user").User} users
  */
 
 export default class UserList extends Component {
@@ -43,7 +38,7 @@ export default class UserList extends Component {
   }
 
   async getUsers() {
-    const users = await this.orm.searchRead("res.users", [], ["id", "name"]);
+    const users = await this.orm.searchRead("res.users", [], ["id", "name","email"]);
 
     if (users) {
       this.state.users = users;
