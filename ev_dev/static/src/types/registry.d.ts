@@ -5,11 +5,7 @@ declare module "@web/core/registry" {
   }
 
   export class Registry<T = any> {
-    add(
-      key: string,
-      value: T,
-      options?: RegistryAddOptions
-    ): this;
+    add(key: string, value: T, options?: RegistryAddOptions): this;
 
     get(key: string, defaultValue?: T): T;
 
@@ -28,6 +24,7 @@ declare module "@web/core/registry" {
    */
   export type Category =
     | "fields"
+    | "actions"
     | "services"
     | "effects"
     | "views"

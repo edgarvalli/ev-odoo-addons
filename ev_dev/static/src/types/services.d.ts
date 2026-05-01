@@ -1,3 +1,5 @@
+import { ClientAction } from "./actions";
+
 declare module "@web/core/utils/hooks" {
   // -------------------------
   // HTTP SERVICE
@@ -91,6 +93,23 @@ declare module "@web/core/utils/hooks" {
     setParts(parts: Record<string, string | null>): void;
   }
 
+  //--------------------------
+  // UI SERVICE
+  //--------------------------
+
+  export interface UIService {
+    block(): void;
+    unblock(): void;
+  }
+
+  //--------------------------
+  // UI SERVICE
+  //--------------------------
+
+  export interface ActionService {
+    doAction(params: ClientAction): void;
+  }
+
   // -------------------------
   // SERVICES MAP
   // -------------------------
@@ -101,9 +120,8 @@ declare module "@web/core/utils/hooks" {
     user: UserService;
     cookie: CookieService;
     title: TitleService;
-
-    // permite servicios custom
-    [key: string]: any;
+    ui: UIService;
+    action: ActionService;
   }
 
   // -------------------------
