@@ -1,71 +1,79 @@
 from typing import Union, List
 from odoo.models import AbstractModel
-from odoo.exceptions import UserError
-from ..tools.sqltools import empleado_query
-from ..tools.contpaqi_tools import get_dsl, get_dbname
-from ..tools.nominas_tools import verificar_pertenencia_comprobante
-from ..services import EVEmpleadoService, EVComprobanteService
-from ..types.comprobanate_type import NominaRow, Comprobante, ComprobanteWithXML
+
+from ..services.ev_nominas import EVNominas
 from ..types.empleado_type import EmpleadoDict
+from ..types.comprobanate_type import NominaRow, Comprobante, ComprobanteWithXML
 
 
 class Nominas(AbstractModel):
+
     _name = "ev.contpaqi.nominas"
     _description = "EV Contpaqi Nominas"
 
-    ### Metodos
+    def _srv(self) -> EVNominas:
+        return EVNominas(self.env)
+
+    ############ EMPRESAS ############
 
     def empresas(self, fields: str = "*"):
-        try:
-            with self.env["ev.tools.mssql"].connect("nomGenerales") as db:
-                sql = f"SELECT {fields} FROM NOM10000 WHERE IDEmpresa <> 1;"
-                return db.fetchall(sql)
-        except Exception as err:
-            raise UserError(str(err))
+        return self._srv().empresas(fields)
 
     def obtener_dsl(self):
-        dbname = get_dbname(self.env, "nominas")
-        try:
-            return get_dsl(self.env, dbname, "nominas")
-        except Exception as err:
-            raise UserError(str(err))
+        return self._srv().obtener_dsl()
+
+    ############ EMPLEADOS ############
 
     def empleados(self, **kwargs):
-        dbname = get_dbname(self.env, "nominas")
-        with self.env["ev.tools.mssql"].connect(dbname) as db:
-            sql, args = empleado_query(dbname, kwargs=kwargs)
-            return db.fetchall(sql, args)
+        return self._srv().empleados.getall(**kwargs)
 
     def buscar_empleado(self, codigo: str) -> EmpleadoDict:
-        try:
-            srv = EVEmpleadoService(self.env)
-            return srv.get(["empleado.codigoempleado = ?"], (codigo,))
-        except Exception as err:
-            raise UserError(str(err))
+
+        conditions = ["empleado.codigoempleado = ?"]
+
+        return self._srv().empleados.get(
+            conditions,
+            (codigo,),
+        )
 
     def buscar_empleado_id(self, id: int) -> EmpleadoDict:
-        try:
-            srv = EVEmpleadoService(self.env)
-            return srv.get(["empleado.idempleado = ?"], (id,))
-        except Exception as err:
-            raise UserError(str(err))
 
-    def comprobantes(self, **kwargs) -> List[Union[Comprobante, ComprobanteWithXML]]:
-        srv = EVComprobanteService(self.env)
-        return srv.nominas.comprobantes(**kwargs)
+        return self._srv().empleados.get(
+            ["empleado.idempleado = ?"],
+            (id,),
+        )
+
+    ############ COMPROBANTES ############
+
+    def comprobantes(
+        self,
+        **kwargs,
+    ) -> List[Union[Comprobante, ComprobanteWithXML]]:
+
+        return self._srv().comprobantes.search(**kwargs)
 
     def obtener_comprobante(
-        self, idcomprobante
+        self,
+        idcomprobante,
     ) -> Union[Comprobante, ComprobanteWithXML]:
-        srv = EVComprobanteService(self.env)
-        return srv.nominas.get_comprobante(idcomprobante)
 
-    def verificar_pertenencia_comprobante(self, id: int, iddocumento: int) -> bool:
-        return verificar_pertenencia_comprobante(self.env, id, iddocumento)
+        return self._srv().comprobantes.get(idcomprobante)
 
-    def datos_comprobante(self, id_documento: int) -> NominaRow:
-        try:
-            srv = EVComprobanteService(self.env)
-            return srv.nominas.get_data_comprobante(id_documento)
-        except Exception as err:
-            raise UserError(f"Error obteniendo comprobante: {err}")
+    def verificar_pertenencia_comprobante(
+        self,
+        id: int,
+        iddocumento: int,
+    ) -> bool:
+
+        return self._srv().verificar_pertenencia_comprobante(
+            self.env,
+            id,
+            iddocumento,
+        )
+
+    def datos_comprobante(
+        self,
+        id_documento: int,
+    ) -> NominaRow:
+
+        return self._srv().comprobantes.get_data(id_documento)

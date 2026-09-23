@@ -1,3 +1,3 @@
-from .ev_empleado_service import EVEmpleadoService
-from .ev_comprobante_service import EVComprobanteService
-from .ev_clientes_service import EVClientesService
+from .ev_nominas import EVNominas
+from .ev_comercial import EVComercial
+from .contpaqi_orm import ContpaqiORM

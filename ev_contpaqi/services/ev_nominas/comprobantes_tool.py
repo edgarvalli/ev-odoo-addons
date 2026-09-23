@@ -1,23 +1,17 @@
-from typing import List, Tuple, Union, Optional
-from dataclasses import dataclass
+from typing import Tuple
+from odoo.api import Environment
 import xml.etree.ElementTree as ET
-from datetime import datetime, timedelta
-from odoo.orm.environments import Environment
-from ..tools.sqltools import get_pagination
-from ..tools.contpaqi_tools import get_dsl, get_dbname
-from ..types.comprobanate_type import (
-    NominaRow,
-    MetadataCfdi,
-    MovimientoNomina,
-    Comprobante,
-    ComprobanteWithXML,
-    ComprobantesParams,
-)
+from odoo.exceptions import UserError
+from ...tools.contpaqi_tools import get_dbname, get_dsl
+from .types import NominaRow, MovimientoNomina, MetadataCfdi
 
 
-@dataclass
 class ComprobanteTools:
     env: Environment
+
+    def __init__(self, env: Environment):
+        self.env = env
+        self.dbname = get_dbname(env, "nominas")
 
     def _get_nomina(self, db, dsl: str, id_documento: int) -> NominaRow:
 
@@ -117,13 +111,13 @@ class ComprobanteTools:
         _doc = db.fetchone(sql, (id_documento,))
 
         if not _doc:
-            raise ValueError("No se encontro datos del documento.")
+            raise UserError("No se encontro datos del documento.")
 
         return evtools.dict_parser(_doc)
 
     def _get_nomina_detalle(
         self, db, dsl: str, guid_document: str
-    ) -> Tuple[List[MovimientoNomina], List[MovimientoNomina]]:
+    ) -> Tuple[list[MovimientoNomina], list[MovimientoNomina]]:
 
         sql = f"""
             SELECT
@@ -155,10 +149,10 @@ class ComprobanteTools:
             WHERE GuidDocument=?
         """
 
-        percepciones: List[MovimientoNomina] = []
-        deducciones: List[MovimientoNomina] = []
+        percepciones: list[MovimientoNomina] = []
+        deducciones: list[MovimientoNomina] = []
 
-        moves: List[MovimientoNomina] = db.fetchall(sql, (guid_document,))
+        moves: list[MovimientoNomina] = db.fetchall(sql, (guid_document,))
 
         for item in moves:
 
@@ -246,12 +240,11 @@ class ComprobanteTools:
 
         return cfdi
 
-    def get_data_comprobante(self, id_documento: int):
+    def get_data(self, id_documento: int):
         try:
-            dbname = get_dbname(self.env, "nominas")
-            with self.env["ev.tools.mssql"].connect(dbname) as db:
+            with self.env["ev.tools.mssql"].connect(self.dbname) as db:
 
-                dsl = get_dsl(self.env, dbname, "nominas")
+                dsl = get_dsl(self.env, self.dbname, "nominas")
                 comprobante = self._get_nomina(db, dsl, id_documento)
                 guid_document = comprobante.get("guid_document")
                 percepciones, deducciones = self._get_nomina_detalle(
@@ -281,130 +274,4 @@ class ComprobanteTools:
                 return comprobante
 
         except Exception as err:
-            raise ValueError(f"Error obteniendo comprobante: {err}") from err
-
-
-class ComprobanteNominaService(ComprobanteTools):
-
-    def _build_sql(
-        self,
-        db,
-        dbname: str,
-        conditions: Optional[list[str]] = None,
-        included_xml=False,
-        top: int = None,
-    ) -> str:
-
-        conditions = conditions or []
-        dsl = get_dsl(db, dbname, "nominas")
-
-        where_clause = ""
-        xml_clause = ""
-
-        if included_xml:
-            xml_clause = (
-                f"INNER JOIN [document_{dsl}_content].dbo.DocumentContent dc "
-                f"ON dc.GuidDocument = comprobante.GUIDDocumentoDSL"
-            )
-
-        if conditions:
-            where_clause = f"WHERE {' AND '.join(conditions)}"
-
-        fields = [
-            "iddocumento",
-            "idperiodo",
-            "FORMAT(FechaEmision,'yyyy-MM-dd HH:mm:ss') fechaemision",
-            "FORMAT(FechaPago,'yyyy-MM-dd HH:mm:ss') fechapago",
-            "FORMAT(FechaFinalPago,'yyyy-MM-dd HH:mm:ss') fechafinal",
-            "FORMAT(FechaInicialPago,'yyyy-MM-dd HH:mm:ss') fechainicial",
-            "NumDiasPagados diaspagados",
-            "comprobante.UUID uuid",
-            "GUIDDocumentoDSL guiddocdsl",
-            "GUIDDocumento guiddocumento",
-            "sbc",
-            "c.Total total",
-            "c.NombreEmisor nombreemisor",
-            "c.RFCEmisor rfcemisor",
-        ]
-
-        if included_xml:
-            fields.append("dc.Content content")
-
-        sql = f"""
-            SELECT {f'TOP {top}' if top else ''}
-                {','.join(fields)}
-            FROM [{dbname}].dbo.NOM10043 comprobante
-            {xml_clause}                    
-            INNER JOIN [document_{dsl}_metadata].dbo.Comprobante c
-                ON c.GuidDocument = comprobante.GUIDDocumentoDSL
-            {where_clause}
-            ORDER BY FechaEmision DESC
-        """
-        return sql
-
-    def get_comprobante(
-        self, iddocumento: int
-    ) -> Union[Comprobante, ComprobanteWithXML]:
-
-        try:
-
-            dbname = get_dbname(self.env, "nominas")
-            conditions = ["comprobante.IdDocumento = ?"]
-            args = (iddocumento,)
-
-            with self.env["ev.tools.mssql"].connect(dbname) as db:
-                sql = self._build_sql(db, dbname=dbname, top=1, conditions=conditions)
-                return db.fetchone(sql, args)
-
-        except Exception as e:
-            raise ValueError(str(e))
-
-    def comprobantes(
-        self, **kwargs: ComprobantesParams
-    ) -> Union[List[Comprobante], List[ComprobanteWithXML]]:
-
-        page, limit = get_pagination(**kwargs)
-        offset = ((page - 1) * limit) if page > 1 else 0
-        idempleado = kwargs.get("idempleado")
-        included_xml = kwargs.get("xml", False)
-
-        if not idempleado:
-            raise ValueError("idempleado es requerido")
-
-        try:
-            dbname = get_dbname(self.env, "nominas")
-
-            conditions = [
-                "comprobante.IdEmpleado = ?",
-                "comprobante.GUIDDocumentoDSL <> ''",
-            ]
-
-            args = [idempleado]
-
-            startdate = kwargs.get("startdate")
-            enddate = kwargs.get("enddate")
-
-            if startdate:
-                enddate = enddate or datetime.now().strftime("%Y-%m-%d")
-
-                try:
-                    end_dt = datetime.strptime(enddate, "%Y-%m-%d") + timedelta(days=1)
-                except ValueError:
-                    raise ValueError("Formato de fecha inválido (YYYY-MM-DD)")
-
-                conditions.append("FechaEmision >= ?")
-                conditions.append("FechaEmision < ?")
-
-                args.append(startdate)
-                args.append(end_dt.strftime("%Y-%m-%d"))
-
-            args.append(offset)
-            args.append(limit)
-
-            with self.env["ev.tools.mssql"].connect(dbname) as db:
-                base_sql = self._build_sql(db, dbname, conditions, included_xml)
-                sql = base_sql + " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
-                return db.fetchall(sql, tuple(args))
-
-        except Exception as err:
-            raise ValueError(str(err))
+            raise UserError(f"Error obteniendo comprobante: {err}") from err

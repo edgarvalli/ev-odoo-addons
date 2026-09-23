@@ -1,6 +1,6 @@
 from odoo import fields, models
 from odoo.exceptions import UserError
-from ..services.sync_contpaqi_service import SyncEmployeesService
+from ..services.ev_nominas import SyncEmployees
 
 
 class HrEmployeeMixin(models.Model):
@@ -13,7 +13,7 @@ class HrEmployeeMixin(models.Model):
 
     def action_sync_employee(self):
         try:
-            srv = SyncEmployeesService(self.env)
+            srv = SyncEmployees(self.env)
             srv.sync()
             return {
                 "type": "ir.actions.client",

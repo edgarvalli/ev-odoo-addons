@@ -7,6 +7,7 @@
     <menuitem
         id="menu_ev_inventory_root"
         name="Inventario TI"
+        groups="ev_it_inventory.group_user"
         sequence="10" />
 
     <!-- =========================

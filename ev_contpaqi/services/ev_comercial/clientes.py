@@ -1,18 +1,15 @@
-from typing import List
-from dataclasses import dataclass
-from ..tools.sqltools import get_pagination
-from ..tools.contpaqi_tools import get_dbname
-from odoo.orm.environments import Environment
-from ..types.comercial_types import ClienteDict
+from odoo.exceptions import UserError
+from ..contpaqi_orm import ContpaqiORM
+from ...tools.sqltools import get_pagination
+from .types import ClienteDict
 
 
-@dataclass
-class EVClientesService:
-    env: Environment
+class ComercialClientes(ContpaqiORM):
+    TABLENAME = "admClientes"
+    PRIMARY_KEY = "CIDCLIENTEPROVEEDOR"
+    SISTEMA = "comercial"
 
-    #### HELPERS ####
-
-    def _build_conditions(self, **kwargs):
+    def _build_conditions_buscar(self, **kwargs):
         args = []
         conditions = ["c.CIDCLIENTEPROVEEDOR > 1"]
 
@@ -25,7 +22,7 @@ class EVClientesService:
 
         return conditions, args
 
-    def _build_sql_cliente(self, conditions: List[str] = None, top: int = None):
+    def _build_sql_cliente(self, conditions: list[str] = None, top: int = None):
         top_clause = f"TOP {top}" if top else ""
         if conditions:
             conditions_copy = " AND ".join(conditions)
@@ -68,7 +65,7 @@ class EVClientesService:
             codigo_cliente = kwargs.get("codigo")
 
             if not codigo_cliente:
-                raise ValueError("Debe de definir id:int o codigo:str")
+                raise UserError("Debe de definir id:int o codigo:str")
 
             conditions.append("doc.CCODIGOCLIENTE = ?")
             args.append(codigo_cliente)
@@ -90,7 +87,7 @@ class EVClientesService:
 
         return conditions, args, conditions_cliente, args_cliente
 
-    def _buil_sql_saldo_detalle(self, conditions: List[str]):
+    def _buil_sql_saldo_detalle(self, conditions: list[str]):
         return f"""
             DECLARE @today DATE = CAST(GETDATE() AS DATE);
 
@@ -123,17 +120,23 @@ class EVClientesService:
     def get(self, conditions=[], args=()) -> ClienteDict:
         sql = self._build_sql_cliente(conditions, top=1)
         try:
-            dbname = get_dbname(self.env, "comercial")
-            print(dbname)
-            with self.env["ev.tools.mssql"].connect(dbname) as db:
+            with self.env["ev.tools.mssql"].connect(self.dbname) as db:
                 result = db.fetchone(sql, args)
-                return self.env["ev.tools"].dict_parser(result)
+                return result
         except Exception as e:
-            raise ValueError(str(e))
+            raise UserError(str(e))
 
-    def search(self, **kwargs):
-        conditions, params = self._build_conditions(**kwargs)
+    def buscar(self, **kwargs) -> list[ClienteDict] | ClienteDict:
         offset, limit = get_pagination(**kwargs)
+        conditions = kwargs.get("conditions", [])
+        values = kwargs.get("values", ())
+
+        if limit == 1:
+            if conditions and values:
+                return self.get(conditions, values)
+
+        conditions, params = self._build_conditions_buscar(**kwargs)
+
         sql = f"""
             {self._build_sql_cliente(conditions)}
             ORDER BY c.CFECHAALTA DESC
@@ -143,12 +146,10 @@ class EVClientesService:
         params.extend([offset, limit])
 
         try:
-            dbname = get_dbname(self.env, "comercial")
-
-            with self.env["ev.tools.mssql"].connect(dbname) as db:
+            with self.env["ev.tools.mssql"].connect(self.dbname) as db:
                 return db.fetchall(sql, tuple(params))
         except Exception as e:
-            raise ValueError(str(e))
+            raise UserError(str(e))
 
     def saldos(self, saldo_cero=True):
         """Funcion para obtener el estado de cuenta de los clientes"""
@@ -210,16 +211,14 @@ class EVClientesService:
         """
 
         try:
-            dbname = get_dbname(self.env, "comercial")
-            with self.env["ev.tools.mssql"].connect(dbname) as db:
+            with self.env["ev.tools.mssql"].connect(self.dbname) as db:
                 return db.fetchall(sql)
         except Exception as e:
-            raise ValueError(str(e))
+            raise UserError(str(e))
 
     def detalle_saldos(self, **kwargs):
         try:
-            dbname = get_dbname(self.env, "comercial")
-            with self.env["ev.tools.mssql"].connect(dbname) as db:
+            with self.env["ev.tools.mssql"].connect(self.dbname) as db:
                 conditions, args, conditions_cliente, args_cliente = (
                     self._build_conditions_saldo(**kwargs)
                 )
@@ -228,4 +227,4 @@ class EVClientesService:
                 cliente["facturas"] = db.fetchall(sql, tuple(args))
                 return self.env["ev.tools"].dict_parser(cliente)
         except Exception as e:
-            raise ValueError(str(e))
+            raise UserError(str(e))

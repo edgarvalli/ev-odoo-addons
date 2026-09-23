@@ -8,6 +8,7 @@
     "depends": ["base", "mail"],
     "data": [
         "security/ir.model.access.csv",
+        "data/groups.xml",
         # vistas primero
         "views/ev_inv_devices_views.xml",
         "views/ev_inv_software_views.xml",

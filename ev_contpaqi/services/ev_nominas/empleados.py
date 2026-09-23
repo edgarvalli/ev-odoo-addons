@@ -1,15 +1,18 @@
 from typing import List
-from dataclasses import dataclass
-from odoo.orm.environments import Environment
-from ..types.empleado_type import EmpleadoDict
-from ..tools.contpaqi_tools import get_dbname
+from odoo.api import Environment
+from odoo.exceptions import UserError
+
+from .tools import empleado_query
+from ...types.empleado_type import EmpleadoDict
+from ...tools.contpaqi_tools import get_dbname
 
 
-@dataclass
-class EVEmpleadoService:
-    env: Environment
+class NominasEmpleados:
+    def __init__(self, env: Environment):
+        self.env = env
+        self.dbname = get_dbname(env, "nominas")
 
-    def _build_query(self, dbname: str, conditions=None, top: int = None):
+    def _build_query(self, conditions=None, top: int = None):
         top_clause = f"TOP {top}" if top else ""
         sql = f"""
             SELECT {top_clause}
@@ -39,10 +42,10 @@ class EVEmpleadoService:
                 empleado.cidregistropatronal
                 --empresa.GUIDDSL guiddsl,
                 --empresa.NombreEmpresaFiscal empresa
-            FROM [{dbname}].dbo.nom10001 empleado
-            INNER JOIN [{dbname}].dbo.NOM10006 puesto ON puesto.idpuesto = empleado.idpuesto
-            INNER JOIN [{dbname}].dbo.NOM10032 turno ON empleado.idturno = turno.idturno
-            INNER JOIN [{dbname}].dbo.NOM10003 departamentos ON departamentos.iddepartamento = empleado.iddepartamento
+            FROM [{self.dbname}].dbo.nom10001 empleado
+            INNER JOIN [{self.dbname}].dbo.NOM10006 puesto ON puesto.idpuesto = empleado.idpuesto
+            INNER JOIN [{self.dbname}].dbo.NOM10032 turno ON empleado.idturno = turno.idturno
+            INNER JOIN [{self.dbname}].dbo.NOM10003 departamentos ON departamentos.iddepartamento = empleado.iddepartamento
         """
 
         if conditions:
@@ -53,18 +56,21 @@ class EVEmpleadoService:
 
     def search(self, conditions=[], params: tuple = None) -> List[EmpleadoDict]:
         try:
-            dbname = get_dbname(self.env, "nominas")
-            sql = self._build_query(dbname, conditions)
-            with self.env["ev.tools.mssql"].connect(dbname) as db:
+            sql = self._build_query(conditions)
+            with self.env["ev.tools.mssql"].connect(self.dbname) as db:
                 return db.fetchall(sql, tuple(params) or ())
         except Exception as e:
-            raise ValueError(str(e))
+            raise UserError(str(e))
 
     def get(self, conditions=[], params: tuple = None) -> EmpleadoDict:
         try:
-            dbname = get_dbname(self.env, "nominas")
-            sql = self._build_query(dbname, conditions, top=1)
-            with self.env["ev.tools.mssql"].connect(dbname) as db:
+            sql = self._build_query(conditions, top=1)
+            with self.env["ev.tools.mssql"].connect(self.dbname) as db:
                 return db.fetchone(sql, tuple(params) or ())
         except Exception as e:
-            raise ValueError(str(e))
+            raise UserError(str(e))
+
+    def getall(self, **kwargs):
+        with self.env["ev.tools.mssql"].connect(self.dbname) as db:
+            sql, args = empleado_query(self.dbname, kwargs=kwargs)
+            return db.fetchall(sql, args)

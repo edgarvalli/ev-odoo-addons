@@ -12,7 +12,7 @@ class ResCompanyMixin(models.Model):
     ev_contpaqi_comercial_db = fields.Many2one(
         "ev.contpaqi.empresas",
         domain=[("system_origin", "=", "comercial")],
-        string="Empresa Contpaqi Nominas",
+        string="Empresa Contpaqi Comercial",
     )
 
     def sync_empresas(self):

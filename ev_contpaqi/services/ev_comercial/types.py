@@ -2,13 +2,6 @@ from datetime import datetime
 from typing import List, TypedDict, Literal
 
 
-class EmpresaDict(TypedDict):
-    id: int
-    empresa: str
-    ruta_datos: str
-    dbname: str
-
-
 class FacturaDict(TypedDict):
     id_documento: int
     serie: str

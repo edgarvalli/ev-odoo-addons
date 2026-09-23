@@ -20,6 +20,7 @@ class SqlServer:
         instance="SQLExpress",
         user="sa",
         password="",
+        autocommit=False,
     ):
 
         self.dbname = dbname
@@ -27,8 +28,13 @@ class SqlServer:
         self.instance = instance
         self.user = user
         self.password = password
+        self.autocommit = autocommit
 
         self._create_connection()
+
+    # =========================
+    # CONNECTION
+    # =========================
 
     def _get_connection_str(self, driver):
 
@@ -49,6 +55,7 @@ class SqlServer:
         installed = pyodbc.drivers()
 
         for d in self.DRIVERS_PRIORIDAD:
+
             if d in installed:
                 SqlServer.driver = d
                 return d
@@ -63,34 +70,24 @@ class SqlServer:
 
         driver = self._get_driver()
 
-        self.connection = pyodbc.connect(self._get_connection_str(driver))
+        self.connection = pyodbc.connect(
+            self._get_connection_str(driver),
+            autocommit=self.autocommit,
+        )
+
         self.cursor = self.connection.cursor()
 
     # =========================
-    # SQL HELPERS
+    # INTERNAL
     # =========================
 
-    def execute(self, query, args=()):
-        """
-        Ejecuta una query sin retorno (INSERT / UPDATE / DELETE)
-        """
-        self.cursor.execute(query, args)
-
-    def fetchall(self, query, args=()):
-        """
-        Ejecuta un SELECT y devuelve todos los registros
-        """
-        self.cursor.execute(query, args)
+    def _dict_fetch(self):
 
         cols = [c[0] for c in self.cursor.description]
 
         return [dict(zip(cols, row)) for row in self.cursor.fetchall()]
 
-    def fetchone(self, query, args=()):
-        """
-        Ejecuta un SELECT y devuelve un registro
-        """
-        self.cursor.execute(query, args)
+    def _dict_fetchone(self):
 
         row = self.cursor.fetchone()
 
@@ -101,21 +98,59 @@ class SqlServer:
 
         return dict(zip(cols, row))
 
+    # =========================
+    # QUERY HELPERS
+    # =========================
+
+    def execute(self, query, args=()):
+
+        self.cursor.execute(query, args)
+
+        return self.cursor.rowcount
+
+    def fetchall(self, query, args=()):
+
+        self.cursor.execute(query, args)
+
+        return self._dict_fetch()
+
+    def fetchone(self, query, args=()):
+
+        self.cursor.execute(query, args)
+
+        return self._dict_fetchone()
+
+    def insert(self, query, args=()):
+
+        self.cursor.execute(query, args)
+
+        return self._dict_fetchone()
+
+    # =========================
+    # TRANSACTIONS
+    # =========================
+
     def commit(self):
-        """
-        Confirma la transacción
-        """
+
         self.connection.commit()
 
     def rollback(self):
-        """
-        Revierte la transacción
-        """
+
         self.connection.rollback()
 
     # =========================
     # HELPERS
     # =========================
+
+    @property
+    def connected(self):
+
+        try:
+            self.cursor.execute("SELECT 1")
+            return True
+
+        except Exception:
+            return False
 
     def close(self):
 
@@ -125,12 +160,23 @@ class SqlServer:
         if getattr(self, "connection", None):
             self.connection.close()
 
+    # =========================
+    # CONTEXT MANAGER
+    # =========================
+
     def __enter__(self):
+
         return self
 
     def __exit__(self, exc_type, exc, tb):
 
-        if exc:
-            self.connection.rollback()
+        try:
 
-        self.close()
+            if exc:
+                self.rollback()
+            else:
+                self.commit()
+
+        finally:
+
+            self.close()

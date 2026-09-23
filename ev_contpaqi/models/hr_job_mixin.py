@@ -1,6 +1,6 @@
 from odoo import models, fields
 from odoo.exceptions import UserError
-from ..services.sync_contpaqi_service import SyncJobTitleService
+from ..services.ev_nominas import SyncJobTitle
 
 
 class HrJobMixin(models.Model):
@@ -10,7 +10,7 @@ class HrJobMixin(models.Model):
 
     def action_sync_job(self):
         try:
-            srv = SyncJobTitleService(self.env)
+            srv = SyncJobTitle(self.env)
             srv.sync()
 
             return {
