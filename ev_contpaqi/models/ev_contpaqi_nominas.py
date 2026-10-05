@@ -59,17 +59,8 @@ class Nominas(AbstractModel):
 
         return self._srv().comprobantes.get(idcomprobante)
 
-    def verificar_pertenencia_comprobante(
-        self,
-        id: int,
-        iddocumento: int,
-    ) -> bool:
-
-        return self._srv().verificar_pertenencia_comprobante(
-            self.env,
-            id,
-            iddocumento,
-        )
+    def verificar_pertenencia_comprobante(self, id: int, iddocumento: int) -> bool:
+        return self._srv().verificar_pertenencia_comprobante(id, iddocumento)
 
     def datos_comprobante(
         self,
