@@ -3,7 +3,7 @@ from odoo import models, fields
 
 class EVCatalogoSAT(models.Model):
     _name = "ev.catalogo.sat"
-    _description = "[EV] Catalogo SAT"
+    _description = "EV - Catalogo SAT"
     _rec_name = "descripcion"
 
     clave = fields.Char("Clave")

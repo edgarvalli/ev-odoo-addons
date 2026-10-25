@@ -1,16 +1,24 @@
 {
     "name": "EV Comprobante Fiscal",
-    "description": "Modulo para timbrar facturas",
+    "version": "20.0.1.0.0",
+    "summary": "Módulo para timbrar facturas electrónicas",
+    "description": "Módulo para el timbrado de comprobantes fiscales CFDI.",
     "author": "Edgar Valli",
     "license": "LGPL-3",
-    "category": "Sales",
-    "depends": ["base","sale"],
+    "category": "Accounting",
+    "depends": [
+        "base",
+        "sale",
+        "account",
+    ],
     "data": [
+        "security/ir.access.csv",
         "data/actions.xml",
         "data/menu.xml",
-        "security/ir.model.access.csv",
         "views/ev_catalogo_sat_view.xml",
         "views/account_move_extended.xml",
-        "views/ev_comprobante_view.xml"
-    ]  
+        "views/ev_comprobante_view.xml",
+    ],
+    "installable": True,
+    "application": True,
 }

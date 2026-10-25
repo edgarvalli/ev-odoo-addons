@@ -1,6 +1,6 @@
 import re, logging
-from odoo import models, fields, api
 from odoo.exceptions import ValidationError
+from odoo import models, fields, api, release
 
 _logger = logging.getLogger(__name__)
 
@@ -9,7 +9,11 @@ class EVComprobante(models.Model):
     _name = "ev.comprobante.fiscal"
     _description = "[EV] Comprobante Fiscal"
     _rec_name = "uuid"
-    _sql_constraints = [("unique_uuid", "unique(uuid)", "El UUID ya existe.")]
+    _sql_constraints = (
+        models.Constraint("unique(uuid)", "El UUID ya existe.")
+        if release.version == "20.0"
+        else [("unique_uuid", "unique(uuid)", "El UUID ya existe.")]
+    )
 
     tipo = fields.Selection(
         selection=lambda self: self._tipo_comprobante(),

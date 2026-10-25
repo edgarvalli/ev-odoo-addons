@@ -1,7 +1,7 @@
 from odoo import models, fields, api
 
 
-class AccountMoveMixin(models.Model):
+class AccountMove(models.Model):
     _inherit = "account.move"
 
     ev_estatus = fields.Selection(
@@ -36,7 +36,7 @@ class AccountMoveMixin(models.Model):
         store=False,
     )
 
-    ev_forma_pago_domain = fields.Binary(
+    ev_forma_pago_domain = fields.Selection(
         "Forma de Pago Domain", compute="_forma_pago_compute"
     )
 

@@ -2,7 +2,7 @@ from typing import List
 from odoo import models, api
 from ..types.ir_attachment_type import FileType
     
-class IrAttachmentMixin(models.Model):
+class IrAttachment(models.Model):
     _inherit = "ir.attachment"
 
     @api.model
