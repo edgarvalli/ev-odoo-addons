@@ -6,7 +6,7 @@ from requests.auth import HTTPBasicAuth
 
 from ..models.conceptos import Concepto
 from ..interfaces.types import HttpMethod
-from ..models.config import EvTimbradoConfig
+from ..models.config.ev_timbrado_config import EvTimbradoConfig
 from ..models.comprobante import Comprobante
 from ..models.responses import AuthFacturamaResponse
 from ..interfaces.facturama_responses import FacturaResponse
@@ -23,11 +23,12 @@ class FacturamaClient:
 
         self.config = config
         self.session = requests.Session()
-        self.session.auth = HTTPBasicAuth(config.user, config.password)
+        self.session.auth = HTTPBasicAuth(config.facturama.user, config.facturama.password)
         self.session.headers.update({"Content-Type": "application/json"})
 
     def _build_headers(self):
-        auth = b64encode(f"{self.config.user}:{self.config.password}".encode()).decode()
+        auth_str = f"{self.config.facturama.user}:{self.config.facturama.password}".encode()
+        auth = b64encode(auth_str).decode()
         return {"Authorization": f"Basic {auth}", "Content-Type": "application/json"}
 
     def _build_taxes(self, concepto: Concepto) -> list[dict[str, Any]]:

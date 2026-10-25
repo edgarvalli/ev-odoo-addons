@@ -1,7 +1,7 @@
 from ..providers.facturama import FacturamaClient
 from ..providers.enlace_fiscal import EnlaceFiscal
 from ..models.comprobante import Comprobante
-from ..models.config import EvTimbradoConfig
+from ..models.config.ev_timbrado_config import EvTimbradoConfig
 
 
 class EVTimbrado:
