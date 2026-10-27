@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- =========================================================
+         MENÚS
+    ========================================================== -->
+
+    <menuitem id="menu_ev_assets_root"
+        name="Activos"
+        sequence="70"
+        groups="base.group_user" />
+
+    <menuitem id="menu_ev_assets_inventory"
+        name="Inventario"
+        parent="menu_ev_assets_root"
+        action="action_ev_asset"
+        sequence="10"
+        groups="base.group_user" />
+
+    <menuitem id="menu_ev_assets_configuration"
+        name="Configuración"
+        parent="menu_ev_assets_root"
+        sequence="90"
+        groups="base.group_system" />
+
+    <menuitem id="menu_ev_asset_category"
+        name="Categorías"
+        parent="menu_ev_assets_configuration"
+        action="action_ev_asset_category"
+        sequence="10"
+        groups="base.group_system" />
+
+    <menuitem id="menu_ev_asset_brand"
+        name="Marcas"
+        parent="menu_ev_assets_configuration"
+        action="action_ev_asset_brand"
+        sequence="20"
+        groups="base.group_system" />
+
+    <menuitem id="menu_ev_asset_model"
+        name="Modelos"
+        parent="menu_ev_assets_configuration"
+        action="action_ev_asset_model"
+        sequence="30"
+        groups="base.group_system" />
+
+    <menuitem id="menu_ev_asset_location"
+        name="Ubicaciones"
+        parent="menu_ev_assets_configuration"
+        action="action_ev_asset_location"
+        sequence="40"
+        groups="base.group_system" />
+
+</odoo>

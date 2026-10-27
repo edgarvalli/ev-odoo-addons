@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- =========================================================
+         MODELOS
+    ========================================================== -->
+
+    <record id="view_ev_asset_model_list" model="ir.ui.view">
+        <field name="name">ev.asset.model.list</field>
+        <field name="model">ev.asset.model</field>
+        <field name="arch" type="xml">
+            <list string="Modelos">
+                <field name="name" />
+                <field name="brand_id" />
+                <field name="active" />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ev_asset_model_form" model="ir.ui.view">
+        <field name="name">ev.asset.model.form</field>
+        <field name="model">ev.asset.model</field>
+        <field name="arch" type="xml">
+            <form string="Modelo">
+                <sheet>
+                    <group>
+                        <field name="name" />
+                        <field name="brand_id" />
+                        <field name="active" />
+                    </group>
+                    <group>
+                        <field name="description" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ev_asset_user,ev.asset user,model_ev_asset,base.group_user,1,0,0,0
+access_ev_asset_admin,ev.asset admin,model_ev_asset,base.group_system,1,1,1,1
+access_ev_asset_category_user,ev.asset.category user,model_ev_asset_category,base.group_user,1,0,0,0
+access_ev_asset_category_admin,ev.asset.category admin,model_ev_asset_category,base.group_system,1,1,1,1
+access_ev_asset_brand_user,ev.asset.brand user,model_ev_asset_brand,base.group_user,1,0,0,0
+access_ev_asset_brand_admin,ev.asset.brand admin,model_ev_asset_brand,base.group_system,1,1,1,1
+access_ev_asset_model_user,ev.asset.model user,model_ev_asset_model,base.group_user,1,0,0,0
+access_ev_asset_model_admin,ev.asset.model admin,model_ev_asset_model,base.group_system,1,1,1,1
+access_ev_asset_location_user,ev.asset.location user,model_ev_asset_location,base.group_user,1,0,0,0
+access_ev_asset_location_admin,ev.asset.location admin,model_ev_asset_location,base.group_system,1,1,1,1

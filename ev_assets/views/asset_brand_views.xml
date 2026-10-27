@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- =========================================================
+         MARCAS
+    ========================================================== -->
+
+    <record id="view_ev_asset_brand_list" model="ir.ui.view">
+        <field name="name">ev.asset.brand.list</field>
+        <field name="model">ev.asset.brand</field>
+        <field name="arch" type="xml">
+            <list string="Marcas">
+                <field name="name" />
+                <field name="active" />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ev_asset_brand_form" model="ir.ui.view">
+        <field name="name">ev.asset.brand.form</field>
+        <field name="model">ev.asset.brand</field>
+        <field name="arch" type="xml">
+            <form string="Marca">
+                <sheet>
+                    <group>
+                        <field name="name" />
+                        <field name="active" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

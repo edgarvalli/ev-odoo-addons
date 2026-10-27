@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- =========================================================
+         ACCIONES TICKETS
+    ========================================================== -->
+
+    <record id="action_ev_helpdesk_ticket" model="ir.actions.act_window">
+        <field name="name">Todos los tickets</field>
+        <field name="res_model">ev.helpdesk.ticket</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_ev_helpdesk_ticket_search" />
+        <field name="context">{'search_default_open_tickets': 1}</field>
+    </record>
+
+    <record id="action_ev_helpdesk_my_tickets" model="ir.actions.act_window">
+        <field name="name">Mis solicitudes</field>
+        <field name="res_model">ev.helpdesk.ticket</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_ev_helpdesk_ticket_search" />
+        <field name="domain">[('user_id', '=', uid)]</field>
+    </record>
+
+    <record id="action_ev_helpdesk_assigned_tickets" model="ir.actions.act_window">
+        <field name="name">Tickets asignados a mí</field>
+        <field name="res_model">ev.helpdesk.ticket</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_ev_helpdesk_ticket_search" />
+        <field name="domain">[('assigned_user_id', '=', uid), ('is_closed', '=', False)]</field>
+    </record>
+
+</odoo>

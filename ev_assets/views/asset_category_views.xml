@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- =========================================================
+         CATEGORÍAS
+    ========================================================== -->
+
+    <record id="view_ev_asset_category_list" model="ir.ui.view">
+        <field name="name">ev.asset.category.list</field>
+        <field name="model">ev.asset.category</field>
+        <field name="arch" type="xml">
+            <list string="Categorías">
+                <field name="name" />
+                <field name="code" />
+                <field name="active" />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ev_asset_category_form" model="ir.ui.view">
+        <field name="name">ev.asset.category.form</field>
+        <field name="model">ev.asset.category</field>
+        <field name="arch" type="xml">
+            <form string="Categoría de activo">
+                <sheet>
+                    <group>
+                        <field name="name" />
+                        <field name="code" />
+                        <field name="active" />
+                    </group>
+                    <group>
+                        <field name="description" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

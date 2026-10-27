@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <menuitem id="menu_ev_helpdesk_root"
+        name="Mesa de ayuda"
+        sequence="60"
+        groups="base.group_user" />
+
+    <menuitem id="menu_ev_helpdesk_tickets"
+        name="Todos los tickets"
+        parent="menu_ev_helpdesk_root"
+        action="action_ev_helpdesk_ticket"
+        sequence="10"
+        groups="base.group_user" />
+
+    <menuitem id="menu_ev_helpdesk_my_tickets"
+        name="Mis solicitudes"
+        parent="menu_ev_helpdesk_root"
+        action="action_ev_helpdesk_my_tickets"
+        sequence="20"
+        groups="base.group_user" />
+
+    <menuitem id="menu_ev_helpdesk_assigned_tickets"
+        name="Asignados a mí"
+        parent="menu_ev_helpdesk_root"
+        action="action_ev_helpdesk_assigned_tickets"
+        sequence="30"
+        groups="base.group_user" />
+
+    <menuitem id="menu_ev_helpdesk_configuration"
+        name="Configuración"
+        parent="menu_ev_helpdesk_root"
+        sequence="90"
+        groups="base.group_system" />
+
+    <menuitem id="menu_ev_helpdesk_category"
+        name="Categorías"
+        parent="menu_ev_helpdesk_configuration"
+        action="action_ev_helpdesk_category"
+        sequence="10"
+        groups="base.group_system" />
+
+    <menuitem id="menu_ev_helpdesk_team"
+        name="Equipos"
+        parent="menu_ev_helpdesk_configuration"
+        action="action_ev_helpdesk_team"
+        sequence="20"
+        groups="base.group_system" />
+
+    <menuitem id="menu_ev_helpdesk_stage"
+        name="Etapas"
+        parent="menu_ev_helpdesk_configuration"
+        action="action_ev_helpdesk_stage"
+        sequence="30"
+        groups="base.group_system" />
+
+</odoo>

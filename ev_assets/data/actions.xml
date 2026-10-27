@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- =========================================================
+         ACTIVOS
+    ========================================================== -->
+
+    <record id="action_ev_asset" model="ir.actions.act_window">
+        <field name="name">Inventario de activos</field>
+        <field name="res_model">ev.asset</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_ev_asset_search" />
+        <field name="context">{'search_default_available': 0}</field>
+    </record>
+
+    <!-- =========================================================
+         CATEGORÍAS
+    ========================================================== -->
+
+    <record id="action_ev_asset_category" model="ir.actions.act_window">
+        <field name="name">Categorías</field>
+        <field name="res_model">ev.asset.category</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- =========================================================
+         MARCAS
+    ========================================================== -->
+
+    <record id="action_ev_asset_brand" model="ir.actions.act_window">
+        <field name="name">Marcas</field>
+        <field name="res_model">ev.asset.brand</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- =========================================================
+         MODELOS
+    ========================================================== -->
+
+    <record id="action_ev_asset_model" model="ir.actions.act_window">
+        <field name="name">Modelos</field>
+        <field name="res_model">ev.asset.model</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- =========================================================
+         UBICACIONES
+    ========================================================== -->
+
+    <record id="action_ev_asset_location" model="ir.actions.act_window">
+        <field name="name">Ubicaciones</field>
+        <field name="res_model">ev.asset.location</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

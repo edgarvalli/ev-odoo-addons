@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <data noupdate="1">
+
+        <record id="stage_ev_helpdesk_new" model="ev.helpdesk.stage">
+            <field name="name">Nuevo</field>
+            <field name="sequence">10</field>
+            <field name="is_closed" eval="False" />
+            <field name="is_folded" eval="False" />
+            <field name="active" eval="True" />
+            <field name="description">Ticket recién creado.</field>
+        </record>
+
+        <record id="stage_ev_helpdesk_in_progress" model="ev.helpdesk.stage">
+            <field name="name">En progreso</field>
+            <field name="sequence">20</field>
+            <field name="is_closed" eval="False" />
+            <field name="is_folded" eval="False" />
+            <field name="active" eval="True" />
+            <field name="description">Ticket en proceso de atención.</field>
+        </record>
+
+        <record id="stage_ev_helpdesk_waiting" model="ev.helpdesk.stage">
+            <field name="name">En espera</field>
+            <field name="sequence">30</field>
+            <field name="is_closed" eval="False" />
+            <field name="is_folded" eval="False" />
+            <field name="active" eval="True" />
+            <field name="description">Pendiente de información o de una acción externa.</field>
+        </record>
+
+        <record id="stage_ev_helpdesk_closed" model="ev.helpdesk.stage">
+            <field name="name">Cerrado</field>
+            <field name="sequence">40</field>
+            <field name="is_closed" eval="True" />
+            <field name="is_folded" eval="True" />
+            <field name="active" eval="True" />
+            <field name="description">Ticket resuelto y cerrado.</field>
+        </record>
+
+    </data>
+</odoo>
