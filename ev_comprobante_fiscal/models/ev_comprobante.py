@@ -11,7 +11,7 @@ class EVComprobante(models.Model):
     _rec_name = "uuid"
     _sql_constraints = (
         models.Constraint("unique(uuid)", "El UUID ya existe.")
-        if release.version == "20.0"
+        if release.version == "19.0"
         else [("unique_uuid", "unique(uuid)", "El UUID ya existe.")]
     )
 
