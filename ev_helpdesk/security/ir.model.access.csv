@@ -1,12 +1,9 @@
-
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_ev_asset_user,ev.asset user,model_ev_asset,base.group_user,1,0,0,0
-access_ev_asset_admin,ev.asset admin,model_ev_asset,base.group_system,1,1,1,1
-access_ev_asset_category_user,ev.asset.category user,model_ev_asset_category,base.group_user,1,0,0,0
-access_ev_asset_category_admin,ev.asset.category admin,model_ev_asset_category,base.group_system,1,1,1,1
-access_ev_asset_brand_user,ev.asset.brand user,model_ev_asset_brand,base.group_user,1,0,0,0
-access_ev_asset_brand_admin,ev.asset.brand admin,model_ev_asset_brand,base.group_system,1,1,1,1
-access_ev_asset_model_user,ev.asset.model user,model_ev_asset_model,base.group_user,1,0,0,0
-access_ev_asset_model_admin,ev.asset.model admin,model_ev_asset_model,base.group_system,1,1,1,1
-access_ev_asset_location_user,ev.asset.location user,model_ev_asset_location,base.group_user,1,0,0,0
-access_ev_asset_location_admin,ev.asset.location admin,model_ev_asset_location,base.group_system,1,1,1,1
+access_ev_helpdesk_category_user,ev.helpdesk.category user,model_ev_helpdesk_category,base.group_user,1,1,1,0
+access_ev_helpdesk_category_admin,ev.helpdesk.category admin,model_ev_helpdesk_category,base.group_system,1,1,1,1
+access_ev_helpdesk_team_user,ev.helpdesk.team user,model_ev_helpdesk_team,base.group_user,1,0,0,0
+access_ev_helpdesk_team_admin,ev.helpdesk.team admin,model_ev_helpdesk_team,base.group_system,1,1,1,1
+access_ev_helpdesk_stage_user,ev.helpdesk.stage user,model_ev_helpdesk_stage,base.group_user,1,0,0,0
+access_ev_helpdesk_stage_admin,ev.helpdesk.stage admin,model_ev_helpdesk_stage,base.group_system,1,1,1,1
+access_ev_helpdesk_ticket_user,ev.helpdesk.ticket user,model_ev_helpdesk_ticket,base.group_user,1,1,1,0
+access_ev_helpdesk_ticket_admin,ev.helpdesk.ticket admin,model_ev_helpdesk_ticket,base.group_system,1,1,1,1

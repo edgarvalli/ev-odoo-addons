@@ -9,7 +9,7 @@
         <field name="name">ev.asset.location.list</field>
         <field name="model">ev.asset.location</field>
         <field name="arch" type="xml">
-            <list string="Ubicaciones">
+            <list string="Ubicaciones" editable="top">
                 <field name="name" />
                 <field name="parent_id" />
                 <field name="active" />

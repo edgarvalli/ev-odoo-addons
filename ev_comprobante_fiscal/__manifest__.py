@@ -1,6 +1,6 @@
 {
     "name": "EV Comprobante Fiscal",
-    "version": "20.0.1.0.0",
+    "version": "1.0.0",
     "summary": "Módulo para timbrar facturas electrónicas",
     "description": "Módulo para el timbrado de comprobantes fiscales CFDI.",
     "author": "Edgar Valli",

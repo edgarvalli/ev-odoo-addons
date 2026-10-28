@@ -9,7 +9,7 @@
         <field name="name">ev.asset.category.list</field>
         <field name="model">ev.asset.category</field>
         <field name="arch" type="xml">
-            <list string="Categorías">
+            <list string="Categorías" editable="top">
                 <field name="name" />
                 <field name="code" />
                 <field name="active" />

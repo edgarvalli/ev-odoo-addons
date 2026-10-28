@@ -29,4 +29,46 @@
         <field name="domain">[('assigned_user_id', '=', uid), ('is_closed', '=', False)]</field>
     </record>
 
+    <record id="action_ev_helpdesk_category" model="ir.actions.act_window">
+        <field name="name">Categorías de Soporte</field>
+        <field name="res_model">ev.helpdesk.category</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Crea tu primera categoría de soporte.
+            </p>
+            <p>
+                Organiza los tickets por tipo de incidencia o solicitud.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_ev_helpdesk_team" model="ir.actions.act_window">
+        <field name="name">Equipos de Soporte</field>
+        <field name="res_model">ev.helpdesk.team</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Crea tu primer equipo de soporte.
+            </p>
+            <p>
+                Organiza los equipos responsables de atender los tickets.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_ev_helpdesk_stage" model="ir.actions.act_window">
+        <field name="name">Etapas de Tickets</field>
+        <field name="res_model">ev.helpdesk.stage</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Crea tu primera etapa.
+            </p>
+            <p>
+                Define las etapas del flujo de atención de los tickets de soporte.
+            </p>
+        </field>
+    </record>
+
 </odoo>

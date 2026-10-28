@@ -108,7 +108,7 @@
                     string="Archivados"
                     domain="[('active', '=', False)]" />
 
-                <group expand="0" string="Agrupar por">
+                <!-- <group expand="0" string="Agrupar por">
                     <filter name="group_category"
                         string="Categoría"
                         context="{'group_by': 'category_id'}" />
@@ -124,7 +124,7 @@
                     <filter name="group_responsible"
                         string="Responsable"
                         context="{'group_by': 'assigned_user_id'}" />
-                </group>
+                </group> -->
             </search>
         </field>
     </record>

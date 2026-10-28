@@ -1,6 +1,6 @@
 {
     "name": "EV - Gestión de Activos",
-    "version": "20.0.1.0.0",
+    "version": "1.0.0",
     "summary": "Gestión general de activos y asignaciones",
     "category": "Operations",
     "author": "EV IT",
@@ -8,7 +8,6 @@
     "depends": ["base", "mail"],
     "data": [
         "data/actions.xml",
-        "data/menu.xml",
         "security/ir.model.access.csv",
         "views/asset_views.xml",
         "views/asset_brand_views.xml",

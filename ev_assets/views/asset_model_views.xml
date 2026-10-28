@@ -9,7 +9,7 @@
         <field name="name">ev.asset.model.list</field>
         <field name="model">ev.asset.model</field>
         <field name="arch" type="xml">
-            <list string="Modelos">
+            <list string="Modelos" editable="top">
                 <field name="name" />
                 <field name="brand_id" />
                 <field name="active" />
