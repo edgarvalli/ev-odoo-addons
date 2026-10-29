@@ -1,99 +1,105 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
+    <!-- Menú principal -->
     <menuitem id="menu_ev_helpdesk_root"
-        name="Sistema de Ticket"
+        name="Sistema de Tickets"
         sequence="60"
         web_icon="ev_helpdesk,static/description/icon.png"
-        groups="base.group_user,base.group_system">
+        groups="ev_helpdesk.group_helpdesk_user,ev_helpdesk.group_helpdesk_admin">
 
+        <!-- Tickets -->
         <menuitem id="menu_ev_helpdesk_tickets"
             name="Todos los tickets"
             action="action_ev_helpdesk_ticket"
             sequence="10"
-            groups="base.group_user" />
+            groups="ev_helpdesk.group_helpdesk_admin" />
 
         <menuitem id="menu_ev_helpdesk_my_tickets"
             name="Mis solicitudes"
             action="action_ev_helpdesk_my_tickets"
             sequence="20"
-            groups="base.group_user" />
+            groups="ev_helpdesk.group_helpdesk_user,ev_helpdesk.group_helpdesk_admin" />
 
         <menuitem id="menu_ev_helpdesk_assigned_tickets"
             name="Asignados a mí"
             action="action_ev_helpdesk_assigned_tickets"
             sequence="30"
-            groups="base.group_user" />
+            groups="ev_helpdesk.group_helpdesk_user,ev_helpdesk.group_helpdesk_admin" />
 
+        <!-- Inventario de activos -->
         <menuitem id="menu_helpdesk_ev_assets_inventory"
             name="Activos"
             action="ev_assets.action_ev_asset"
             sequence="40"
-            groups="base.group_system" />
+            groups="ev_helpdesk.group_helpdesk_admin" />
 
+        <!-- Configuración -->
         <menuitem id="menu_ev_helpdesk_configuration"
-            name="Configuracion"
+            name="Configuración"
             sequence="90"
-            groups="base.group_system">
+            groups="ev_helpdesk.group_helpdesk_admin">
 
+            <!-- Configuración de Helpdesk -->
             <menuitem id="menu_ev_helpdesk_config"
                 name="Helpdesk"
-                groups="base.group_system"
-                sequence="10">
+                sequence="10"
+                groups="ev_helpdesk.group_helpdesk_admin">
 
                 <menuitem id="menu_ev_helpdesk_category"
                     name="Categorías"
                     action="action_ev_helpdesk_category"
                     sequence="10"
-                    groups="base.group_system" />
+                    groups="ev_helpdesk.group_helpdesk_admin" />
 
                 <menuitem id="menu_ev_helpdesk_team"
                     name="Equipos"
                     action="action_ev_helpdesk_team"
                     sequence="20"
-                    groups="base.group_system" />
+                    groups="ev_helpdesk.group_helpdesk_admin" />
 
                 <menuitem id="menu_ev_helpdesk_stage"
                     name="Etapas"
                     action="action_ev_helpdesk_stage"
                     sequence="30"
-                    groups="base.group_system" />
+                    groups="ev_helpdesk.group_helpdesk_admin" />
 
             </menuitem>
 
-            <menuitem
-                id="menu_ev_assets"
+            <!-- Configuración de activos -->
+            <menuitem id="menu_ev_assets"
                 name="Activos"
-                sequence="20">
+                sequence="20"
+                groups="ev_helpdesk.group_helpdesk_admin">
 
                 <menuitem id="menu_helpdesk_ev_asset_category"
                     name="Categorías"
                     action="ev_assets.action_ev_asset_category"
                     sequence="10"
-                    groups="base.group_system" />
+                    groups="ev_helpdesk.group_helpdesk_admin" />
 
                 <menuitem id="menu_helpdesk_ev_asset_brand"
                     name="Marcas"
                     action="ev_assets.action_ev_asset_brand"
                     sequence="20"
-                    groups="base.group_system" />
+                    groups="ev_helpdesk.group_helpdesk_admin" />
 
                 <menuitem id="menu_helpdesk_ev_asset_model"
                     name="Modelos"
                     action="ev_assets.action_ev_asset_model"
                     sequence="30"
-                    groups="base.group_system" />
+                    groups="ev_helpdesk.group_helpdesk_admin" />
 
                 <menuitem id="menu_helpdesk_ev_asset_location"
                     name="Ubicaciones"
                     action="ev_assets.action_ev_asset_location"
                     sequence="40"
-                    groups="base.group_system" />
+                    groups="ev_helpdesk.group_helpdesk_admin" />
+
             </menuitem>
 
         </menuitem>
 
     </menuitem>
-
 
 </odoo>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <template id="ev_helpdesk_portal" name="EV Helpdesk - Portal de invitados">
+        <t t-call="web.frontend_layout">
+            <t t-set="title">Portal de soporte</t>
+            <div id="ev-helpdesk-form"></div>
+            <div class="container py-5">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-md-9 col-lg-7">
+
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body p-4 p-md-5">
+
+                                <div class="text-center mb-4">
+                                    <h1 class="h3 fw-bold">
+                                        Portal de soporte
+                                    </h1>
+                                    <p class="text-muted mb-0">
+                                        Consulta el estado de tu solicitud
+                                        de soporte técnico.
+                                    </p>
+                                </div>
+
+                                <div class="alert alert-info" role="alert">
+                                    <strong>¿Ya tienes un ticket?</strong>
+                                    <p class="mb-0">
+                                        Accede desde el enlace que recibiste
+                                        en tu correo electrónico.
+                                    </p>
+                                </div>
+
+                                <div class="text-center mt-4">
+                                    <p class="text-muted small">
+                                        Si necesitas ayuda, contacta al
+                                        equipo de soporte de PKF Monterrey.
+                                    </p>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="card-body p-4">
+                            <h2 class="h5 mb-4">
+                                Conversación del ticket
+                            </h2>
+
+                            <t t-call="portal.message_thread">
+                                <t t-set="object" t-value="ticket" />
+                                <t t-set="disable_composer" t-value="False" />
+                            </t>
+
+                        </div>
+
+                        <p class="text-center text-muted small mt-3">
+                            EV Helpdesk
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+
+            <script src="/ev_helpdesk/static/lib/ev.helpdesk.form.js"></script>
+        </t>
+    </template>
+
+</odoo>

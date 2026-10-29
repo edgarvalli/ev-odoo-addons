@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Portal de soporte</title>
+    <link
+      type="image/x-icon"
+      rel="shortcut icon"
+      href="/web/static/img/favicon.ico"
+    />
+    <link
+      rel="preload"
+      href="/web/static/src/libs/fontawesome/fonts/fontawesome-webfont.woff2?v=4.7.0"
+      as="font"
+      crossorigin=""
+    />
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="/web/assets/6612418/web.assets_frontend.min.css"
+    />
+    <script id="web.layout.odooscript" type="text/javascript">
+      var odoo = {
+        csrf_token: "0f3007c776090d5d88fa0c9490d45525bf877579o1824826532",
+        debug: "1",
+      };
+    </script>
+    <script type="text/javascript">
+      odoo.__session_info__ = {
+        is_admin: true,
+        is_system: true,
+        is_public: false,
+        is_internal_user: true,
+        is_website_user: false,
+        uid: 2,
+        registry_hash:
+          "3d686948621e04e7253ecd72a6f3684330c579eccdb836b1f93f4f6b37fa582c",
+        is_frontend: true,
+        profile_session: null,
+        profile_collectors: null,
+        profile_params: null,
+        show_effect: true,
+        currencies: {
+          33: { name: "MXN", symbol: "$", position: "before", digits: [69, 2] },
+          1: { name: "USD", symbol: "$", position: "before", digits: [69, 2] },
+        },
+        quick_login: true,
+        bundle_params: { lang: "es_MX", debug: "1" },
+        test_mode: false,
+        server_version: "19.0",
+        server_version_info: [19, 0, 0, "final", 0, ""],
+        websocket_worker_version: "19.0-2",
+        translationURL: "/website/translations",
+      };
+      if (!/(^|;\s)tz=/.test(document.cookie)) {
+        const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        document.cookie = `tz=${userTZ}; path=/`;
+      }
+    </script>
+    <script
+      type="text/javascript"
+      defer="defer"
+      src="/web/assets/1c160eb/web.assets_frontend_minimal.min.js"
+      onerror="__odooAssetError = 1"
+    ></script>
+    <script
+      type="text/javascript"
+      onerror="__odooAssetError = 1"
+      defer="defer"
+      src="/web/assets/80388b5/web.assets_frontend_lazy.min.js"
+    ></script>
+
+    <link
+      href="/web/assets/6a48fce/portal.assets_chatter.min.css"
+      type="text/css"
+      rel="stylesheet"
+    />
+    <script
+      src="/web/assets/63383f1/portal.assets_chatter.min.js"
+      type="text/javascript"
+    ></script>
+    <script
+      src="/web/assets/16a6d6e/web.assets_emoji.min.js"
+      type="text/javascript"
+    ></script>
+  </head>
+  <body>
+    <header id="top" data-anchor="true">
+      <nav class="navbar navbar-expand navbar-light bg-light">
+        <div class="container">
+          <a href="/" class="navbar-brand logo">
+            <img
+              src="/logo.png?company=1"
+              alt="Logo of PKF Monterrey"
+              title="PKF Monterrey"
+            />
+          </a>
+          <ul id="top_menu" class="nav navbar-nav ms-auto">
+            <li class="nav-item dropdown o_no_autohide_item">
+              <a
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                class="dropdown-toggle nav-link"
+              >
+                <span class="">Edgar Valli</span>
+              </a>
+              <div
+                role="menu"
+                class="dropdown-menu js_usermenu dropdown-menu-end"
+              >
+                <a
+                  href="/odoo"
+                  role="menuitem"
+                  class="dropdown-item ps-3"
+                  id="o_backend_user_dropdown_link"
+                >
+                  <i
+                    class="fa fa-fw fa-th me-1 small text-primary-emphasis"
+                  ></i>
+                  Aplicaciones
+                </a>
+                <a href="/my/home" role="menuitem" class="dropdown-item ps-3">
+                  <i
+                    class="fa fa-fw fa-id-card-o me-1 small text-primary-emphasis"
+                  ></i>
+                  Mi cuenta
+                </a>
+                <div id="o_logout_divider" class="dropdown-divider"></div>
+                <a
+                  role="menuitem"
+                  id="o_logout"
+                  class="dropdown-item ps-3"
+                  href="/web/session/logout?redirect=/"
+                >
+                  <i
+                    class="fa fa-fw fa-sign-out me-1 small text-primary-emphasis"
+                  ></i>
+                  Cerrar sesión
+                </a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+    <div id="ev-helpdesk-form"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

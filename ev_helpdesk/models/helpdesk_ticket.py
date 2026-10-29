@@ -1,5 +1,6 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from ..services.notification import NotificationService
 
 
 class EVHelpdeskTicket(models.Model):
@@ -113,6 +114,9 @@ class EVHelpdeskTicket(models.Model):
     resolution = fields.Html(string="Solución aplicada", tracking=True)
     active = fields.Boolean(string="Activo", default=True)
 
+    is_admin = fields.Boolean(compute="_compute_user_permissions")
+    is_team_member = fields.Boolean(compute="_compute_user_permissions")
+
     @api.model
     def _default_stage_id(self):
         stage = self.env["ev.helpdesk.stage"].search(
@@ -139,13 +143,51 @@ class EVHelpdeskTicket(models.Model):
                 if stage.is_closed and not vals.get("date_resolved"):
                     vals["date_resolved"] = fields.Datetime.now()
 
-        return super().create(vals_list)
+        tickets = super().create(vals_list)
+        for ticket in tickets:
+            NotificationService(ticket).notify_ticket_created()
+
+        return tickets
 
     def write(self, vals):
+        vals = vals.copy()
         now = fields.Datetime.now()
 
-        if vals.get("assigned_user_id"):
-            vals.setdefault("date_assigned", now)
+        # Guardar valores anteriores para detectar cambios reales.
+        tracked_fields = (
+            "stage_id",
+            "priority",
+            "subject",
+            "description",
+            "resolution",
+            "team_id",
+            "category_id",
+            "asset_id",
+        )
+
+        previous_values = {
+            record.id: {
+                field_name: (
+                    record[field_name].id
+                    if record._fields[field_name].type == "many2one"
+                    else record[field_name]
+                )
+                for field_name in tracked_fields
+            }
+            for record in self
+        }
+
+        previous_assignees = {}
+        if "assigned_user_id" in vals:
+            for record in self:
+                new_assignee_id = vals["assigned_user_id"] or False
+                if record.assigned_user_id.id != new_assignee_id:
+                    previous_assignees[record.id] = True
+
+            if vals["assigned_user_id"]:
+                vals.setdefault("date_assigned", now)
+            else:
+                vals["date_assigned"] = False
 
         if "stage_id" in vals:
             stage = self.env["ev.helpdesk.stage"].browse(vals["stage_id"])
@@ -165,24 +207,60 @@ class EVHelpdeskTicket(models.Model):
             else:
                 vals["date_resolved"] = False
 
-        return super().write(vals)
+        result = super().write(vals)
+
+        for record in self:
+            notification = NotificationService(record)
+
+            # Notificar al técnico cuando se le asigna o cambia la asignación.
+            if previous_assignees.get(record.id) and record.assigned_user_id:
+                notification.notify_ticket_assigned()
+
+            # Notificar cambios relevantes, como etapa o prioridad.
+            changed_fields = [
+                field_name
+                for field_name in tracked_fields
+                if previous_values[record.id][field_name]
+                != (
+                    record[field_name].id
+                    if record._fields[field_name].type == "many2one"
+                    else record[field_name]
+                )
+            ]
+
+            if changed_fields:
+                notification.notify_ticket_updated()
+
+        return result
+
+    def message_post(self, **kwargs):
+        message_type = kwargs.get("message_type", "comment")
+        comment = kwargs.get("body", "")
+
+        notify_comment = message_type == "comment" and not self.env.context.get(
+            "skip_ticket_comment_notification"
+        )
+
+        message = super().message_post(**kwargs)
+
+        if notify_comment:
+            for ticket in self:
+                NotificationService(ticket).notify_ticket_comment(
+                    comment=comment,
+                    attachment_ids=message.attachment_ids.ids,
+                )
+
+        return message
 
     def action_assign_to_me(self):
         """Asigna el ticket al usuario actual."""
         for record in self:
-            record.write(
-                {
-                    "assigned_user_id": self.env.user.id,
-                }
-            )
+            record.write({"assigned_user_id": self.env.user.id})
 
     def action_set_in_progress(self):
         """Mueve el ticket a la etapa En progreso."""
         stage = self.env["ev.helpdesk.stage"].search(
-            [
-                ("name", "=", "En progreso"),
-                ("active", "=", True),
-            ],
+            [("name", "=", "En progreso"), ("active", "=", True)],
             limit=1,
         )
         if not stage:
@@ -193,14 +271,29 @@ class EVHelpdeskTicket(models.Model):
     def action_close(self):
         """Cierra el ticket usando una etapa final."""
         stage = self.env["ev.helpdesk.stage"].search(
-            [
-                ("is_closed", "=", True),
-                ("active", "=", True),
-            ],
+            [("is_closed", "=", True), ("active", "=", True)],
             order="sequence, id",
             limit=1,
         )
+
         if not stage:
             raise ValidationError(_("No hay una etapa final configurada."))
 
         self.write({"stage_id": stage.id})
+
+    def _compute_user_permissions(self):
+        user = self.env.user
+
+        is_admin = user.has_group("ev_helpdesk.group_helpdesk_admin")
+
+        is_team_member = bool(
+            self.env["ev.helpdesk.team"].search_count(
+                [
+                    ("member_ids", "=", user.id),
+                ]
+            )
+        )
+
+        for record in self:
+            record.is_admin = is_admin
+            record.is_team_member = is_team_member
